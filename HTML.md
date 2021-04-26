@@ -27,7 +27,7 @@
     DOCTYPE声明于文档最前面，告诉浏览器以何种方式来渲染页面。
     HTML5中的声明方式如下：
 
-    <!DOCTYPE html> 使用最新的HTML5标准来解析渲染页面
+      !DOCTYPE html  使用最新的HTML5标准来解析渲染页面
     如果不写，就会进入混杂模式
 
 * 严格模式：标准模式，指浏览器按照 W3C 标准解析代码
@@ -35,16 +35,16 @@
 
 ## 03. 行内元素、块级元素、空(void)元素有哪些
 *   常用的块状元素有：
-    <div>、<p>、<h1>...<h6>、<ol>、<ul>、<dl>、<table>、<address>、<blockquote> 、<form>
+    div、 p、 h1 ... h6 、  ol 、  ul 、  dl 、  table 、  address 、  blockquote  、  form 
 *   常用的内联元素有：
-    <a>、<span>、<br>、<i>、<em>、<strong>、<label>、<q>、<var>、<cite>、<code>
+      a 、  span 、  br 、  i 、  em 、  strong 、  label 、  q 、  var 、  cite 、  code 
 *   常用的内联块状元素有：
-    <img>、<input>
+      img 、  input 
 *   知名的空元素：
-    <br/> <hr/> <img/> <input/> <link/><meta/> 
+      br/    hr/    img/    input/    link/   meta/  
 *   鲜为人知的是：
-    <area> <base> <col> <command> <embed>
-    <keygen> <param> <source> <track> <wbr>
+      area    base    col    command    embed 
+      keygen    param    source    track    wbr 
 
 ## 04. Doctype 类型
 *   该标签可声明三种 DTD 类型，分别表示严格版本、过渡版本以及基于框架的 HTML 文档
@@ -94,14 +94,14 @@
 ## 04. 锚点的作用是什么？如何设置锚点
 *   锚点是文档中某行的一个记号，类似于书签，用于链接到文档中的某个位置
 *   定义锚点后，可以创建直接跳到该锚点（页面中的某个小节）的链接，这样使用者就无需不停的滚动页面来寻找信息
-*   在使用 <a> 元素创建锚点，可以使用 name 属性为其命名
+*   在使用   a  元素创建锚点，可以使用 name 属性为其命名
     对其他元素，可以使用 id 属性为其命名
 
 # 标签问题
 ## 01. table 和 div + css 的区别
 1. 核心：速度和加载方式方面的区别
-2. div：<div> 加载方式是即读即加载，遇到 <div> 没有遇到 </div> 的时候一样加载 <div> 中的内容，读多少加载多少
-3. table：加载方式是完成后加载，遇到 <table> 后，在读到 </table> 之前，<table> 中的内容不加载
+2. div：  div  加载方式是即读即加载，遇到   div  没有遇到   /div  的时候一样加载   div  中的内容，读多少加载多少
+3. table：加载方式是完成后加载，遇到   table  后，在读到   /table  之前，  table  中的内容不加载
 
 ## 02. 语义化标签的理解
 1. 用正确的标签做正确的事情！
@@ -140,7 +140,7 @@
 3. h1 标签控制一段文字
 
 ### b 与 strong
-1. <b> 为了加粗而加粗，<strong> 为了标明重点而加粗
+1.   b  为了加粗而加粗，  strong  为了标明重点而加粗
 2. 区别：一个是物理元素，一个是逻辑元素
     1. 物理元素所强调的是一种物理行为，比如把一段文字用 b 标记加粗了，浏览器加粗了这段文字，单纯的加粗，没有其他任何作用
     2. Strong 是强调，向浏览器传递强调某段文字的信息，而这个 Strong 就是逻辑元素，强调文档逻辑的，并非是通知浏览器应该如何显示
@@ -158,13 +158,13 @@
         1. 总是在新行上开始
         2. 高度、行高以及顶和底边距可控制
         3. 宽度缺省是它的容器的100%，除非设定一个宽度
-        4. <div>、<p>、<h1>、<from>、<ul>、<li>都是块元素
+        4.   div 、  p 、  h1 、  from 、  ul 、  li 都是块元素
 02. display:inline 就是将元素显示为行内元素
     * inline 元素的特点
         1. 和其他元素在一行上
         2. 高、行高及顶和底边距不可改变
         3. 宽度就是它的文字或图片的宽度，不可改变
-        4. <span>、<a>、<label>、<input>、<img>、<strong>、<em>都是行内元素
+        4.   span 、  a 、  label 、  input 、  img 、  strong 、  em 都是行内元素
 03. display:inline-block 将对象呈递为内联对象，但是对象的内容作为块对象呈递。旁边的内联对象会被呈递在同一行，允许空格
     * inline-block 元素的特点
         1. 将对象呈递为内联对象，但是对象的内容作为块对象呈递
