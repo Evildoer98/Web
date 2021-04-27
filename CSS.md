@@ -101,17 +101,26 @@
 * 用法：transform:rotate(45deg)
     一个参数“角度”，单位 deg 为度，正数为顺时针旋转，负数为逆时针旋转
 1. 水平翻转
-    1. transform:scale(-1, 1)
-    2. filter:FlipH
+    ```css
+    transform:scale(-1, 1)
+    filter:FlipH
+    ```
 2. 垂直翻转
-    1. transform:scale(1, -1)
-    2. filter:FlipV
+    ```css
+    transform:scale(1, -1)
+    filter:FlipV
+    ```
 3. 顺时针旋转90度
-    1. -moz-transform:rotate(90deg); 
+    1. ```css
+       -moz-transform:rotate(90deg); 
        -webkit-transform:rotate(90deg); 
        -o-transform:rotate(90deg); 
        transform:rotate(90deg); 
-    2. filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1)
+       ```
+    2. ```css
+       filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1)
+       ```
+
 ### 2. 缩放 scale
 * 用法：transform:scale(0.5) 或者 transform:scale(0.5, 2)
 * 参数表示缩放倍数
@@ -137,8 +146,9 @@
     2. 第二个参数表示相对于左上角原点的垂直方向的距离
 * 两个参数除了可以设置为具体的像素值，其中第一个参数可以指定为 left、center、right，第二个参数可以指定为 top、center、bottom
 ### 6. 组合变形
-* transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);
-
+```css
+transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);
+```
 ## 10. CSS 的权重和优先级
 * 权重：
     行内样式（+1000）；
@@ -210,6 +220,7 @@
     3. 如果border-left 无色透明， border-top有色， 就会出来一个45度的锐角
 * 三角形
    1. 基础三角形
+   ```css
     div {
         width: 0;
         height: 0;
@@ -217,26 +228,32 @@
         border-style: solid;
         border-color: transparent transparent red transparent
     }
+    ```
     或者
+    ```css
     div {
         width: 0;
         border: 100px solid transparent;
         border-bottom-color: #343434
     }
+    ```
     2. 等边三角形
+    ```css
         div {
             width: 0;
             border: 100px solid transparent;
             border-bottom: 173px solid #343434
         }
-
+    ```
     3. 直角三角形
+    ```css
         div {
             width: 0;
             border: 0 solid transparent;
             border-left: 100px solid transparent;
             border-bottom: 100px solid #343434
         } 
+    ```
 
 ## 07. Flex 布局，Flex是什么属性的缩写
 * 弹性盒布局，CSS3 的新属性， 是一种替代浮动布局的方案，用于方便布局，比如垂直居中
@@ -249,6 +266,7 @@
 ## 08. 水平垂直居中
 1. 确定容器宽高：
     相对或绝对定位，设置外边距 margin
+    ```css
     div {
         position: relative / fixed;
         width: 500px;
@@ -258,18 +276,20 @@
         margin: -150x 0 0 -250px;
         background-color: pink;
     }
-
+    ```
 2. 不确定容器宽高
     绝对定位，利用 transform 属性
+    ```css
     div {
         position: absolute / fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%)
     }
-
+    ```
 3. flex布局
     高度可以确定，也可以不确定
+    ```css
     .container {
         display: flex;
         align-items: center; 		/* 垂直居中 */
@@ -280,12 +300,12 @@
         height: 100px; /* 可省 */
         background-color: pink;	/* 方便看效果 */
     }  
-
-
+    ```
 4. inline-block
     高度可以确定，也可以不确定
     水平居中：text-align
     垂直居中: 父元素 line-height 与 height 同值，子元素 vertical-align
+    ```css
     .container {
         height: 200px; /* 垂直居中 */
         line-height: 200px; /* 垂直居中 */
@@ -296,6 +316,7 @@
         line-height: 20px; /* 会自动继承，必须设置不同的值来覆盖 */
         vertical-align: middle; /* 垂直居中 */
     }  
+    ```
 
 # 性能优化
 ## 01. 雪碧图
