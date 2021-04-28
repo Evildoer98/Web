@@ -1016,7 +1016,14 @@ b(a.foo) // undefined
     定时器是准时的嘛？
 
 # H5 Web Workers
+* 在html页面中，如果在执行脚本时，页面的状态是不可响应的，直到脚本执行完成后，页面才变成可响应。
+    1. web worker 是运行在后台的js，独立于其他脚本，不会影响页面性能，并且通过 
+    2. postMessage 将结果回传到主线程。这样不会阻塞主线程
 * 可以让js在分线程执行
+* 如何创建web worker
+    1. 检测浏览器对于web worker 的支持
+    2. 创建web worker文件（js，回传函数等）
+    3. 创建web worker对象
 * Worker
   ```javascript
   var worker = new Worker('worker.js');
@@ -1027,6 +1034,32 @@ b(a.foo) // undefined
   * worker内代码不能操作DOM更新UI
   * 不是每个浏览器都支持这个新特性
   * 不能跨域加载JS
+
+# BOM 属性对象方法
+1. 什么是BOM？
+    * BOM(Browser Object Model)即浏览器对象模型，它提供了独立于内容而与浏览器窗口进行交互的对象，其核心对象是window；
+    * BOM是由一些列相关对象构成，并且每个对象都提供了很多方法与属性；
+    * BOM缺乏标准，Javascript语法的标准化组织是ECMA，DOM的标准化组织是W3C，BOM最初是Netscape浏览器标准的一部分；
+    * BOM                                                      
+        1. 浏览器对象模型
+        2. 把 浏览器 当作一个 对象 来看待
+        3. BOM 的顶级对象是window
+        4. BOM 学习的是浏览器窗口交互的一些对象
+        5. BOM 是浏览器厂商在各自浏览器上定义的，兼容性较差     
+    * DOM
+        1. 文档对象模型
+        2. DOM 把文档 当作一个 对象 来看待
+        3. DOM 的顶级对象是 document
+        4. DOM 主要学习的是操作页面元素
+        5. DOM 是 W3C 标准规范
+2. BOM的构成
+    1. BOM 比 DOM 更大，它包含 DOM
+        * Window （document、location、navigation、screen、history）
+    2. Window 对象是浏览器的顶级对象，它具有双重角色
+        1. 它是JS访问浏览器窗口的一个接口
+        2. 它是一个全局对象，定义在全局作用域中的变量，函数都会变成window对象的属性和方法
+           * 在调用的时候可以省略window，对话框都属于window对象方法，如alert（）、prompt（）等
+    * 注意：window 下的一个特殊属性 window.name
 
 # 模块化
 * 模块化的理解
