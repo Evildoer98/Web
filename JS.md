@@ -281,6 +281,68 @@ b(a.foo) // undefined
 * 解决:
     及时释放 f=null 让内部对象成为垃圾对象
 
+# 函数柯里化
+* 是把接受多个参数的函数变换成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下参数且返回结果的新函数的技术
+* 柯里化其实本身是固定一个可以预期的参数，并返回一个特定的函数，处理一批特定的需求，增加了函数的适用性，但同时降低了函数的适用范围
+* 思想：降低适用范围，提高适用性
+* 用处：
+    1. 提高适用性：
+        通用函数解决兼容性问题，但是同时也会带来适用的不便利性，不同的应用场景往往要传递很多参数，以达到解决特定的目的，有时候应用中，会对同一个规则进行反复适用，这样就造成了代码的重复性
+    2. 延迟执行：
+        柯里化的另一个应用场景是延迟执行。不断的柯里化，累积传入的参数，最后执行
+    3. 固定易变因素：
+        柯里化特性决定了这一应用场景。提前把易变因素，传参固定下来，生成一个更明确的应用函数。最典型的代表，是 bind 函数用以固定 this 这个易变对象
+* eg:
+    ```javascript
+        // 普通的 add() 函数
+        
+        function add (x, y) {
+            return x + y
+        }
+        // 柯里化（Currying）
+        function curryingAdd (x) {
+            return function (y) {
+                return x + y
+            }
+        }
+        add(1, 2)  // 3
+        curryingAdd(1)(2) // 3
+    ```
+    * 优点：参数复用、提前确认、延迟执行
+    * 性能：
+        1. 存取 arguments 对象通常要比存取参数要慢一点
+        2. 一些老版本的浏览器在 arguments.length 的实现上是相当慢的
+        3. 使用 fn.apply(...) 和 fn.call(...) 通常比直接调用 fn(...) 稍微慢点
+        4. 创建大量嵌套作用域和闭包函数会带来花销，无论是在内存还是在速度上
+* 经典面试题
+    ```javascript
+    // 实现一个 add 方法，使计算结果能够满足如下预期
+    add(1)(2)(3) = 6;
+    add(1, 2, 3)(4) = 10;
+    add(1)(2)(3)(4)(5) = 15;
+
+    function add () {
+         // 第一次执行时，定义一个数组专门用来存储所有的参数
+        var _args = Array.prototype.slice.call(arguments)
+        // 在内部声明一个函数，利用闭包的特性保存_args并收集所有的参数值
+        var _adder = function () {
+            _args.push(...arguments)
+            return _adder
+        }
+        // 利用toString隐式转换的特性，当最后执行时隐式转换，并计算最终的值返回
+        _adder.toString = function () {
+            return _args.reduce(function (a, b) => {
+                return a + b
+            })
+        }
+        return _adder
+    }
+    add(1)(2)(3)                // 6
+    add(1, 2, 3)(4)             // 10
+    add(1)(2)(3)(4)(5)          // 15
+    add(2, 6)(1)                // 9
+    ```
+
 # New
 * new 操作符可以帮助我们构建出一个实例，并且绑定上this，内部执行步骤大概分为以下：
     1. 新生成一个对象
@@ -628,7 +690,7 @@ b(a.foo) // undefined
       arrayObject.slice(start,end)
     * concat() 方法用于连接两个或多个数组。(该方法不会改变现有的数组，而仅仅会返回被连接数组的一个副本)
       arrayObject.concat(arrayX,arrayX,......,arrayX)
-```javascript
+    ```javascript
         var arr1 = ['a','b','c']
         var arr2 = arr1.slice(0)
         arr2[0] = 'test'
@@ -640,17 +702,17 @@ b(a.foo) // undefined
         arr2[0] = 'test'
         console.log(arr1); // ["a", "b", "c"]
         console.log(arr2); // ["test", "b", "c"]
-```
+    ```
     * 拷贝之后数组各个值的指针还是指向相同的存储地址
     * slice() 和 concat() 这两个方法，仅适用于对不包含引用对象的以为数组的深拷贝
     * 原理：
-```javascript
+        ```javascript
         function deepCopy(arr1, arr2) {
             for (var i = 0; i < arr1.length; ++i) {
                 arr2[i] = arr1[i];
             }
         }
-```
+        ```
 2. ES6拓展运算符实现数组的深拷贝
 ```javascript
     var arr1 = [1,2,3,4,5]
@@ -952,6 +1014,19 @@ b(a.foo) // undefined
     JS 的执行原理？
     哪些是微宏任务？
     定时器是准时的嘛？
+
+# H5 Web Workers
+* 可以让js在分线程执行
+* Worker
+  ```javascript
+  var worker = new Worker('worker.js');
+  worker.onMessage = function(event){event.data} // 用来接收另一个线程发送过来的数据的回调
+  worker.postMessage(data1) // 向另一个线程发送数据
+  ```
+* 问题:
+  * worker内代码不能操作DOM更新UI
+  * 不是每个浏览器都支持这个新特性
+  * 不能跨域加载JS
 
 # 模块化
 * 模块化的理解
