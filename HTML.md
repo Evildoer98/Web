@@ -2,7 +2,7 @@
 ## HTML5 的新特性以及移除的元素
 * HTML5 语义化标签是指正确的标签包含了正确的内容，接口良好，比如nva表示导航条，类似的还有article、header、footer等等标签
 ### 01. 新特性
-*    新增语义化标签：nav、header、footer、aside、section、article、details、summary、dialog
+*   新增语义化标签：nav、header、footer、aside、section、article、details、summary、dialog
 
 *   音频、视频标签：audio、video
 
@@ -59,7 +59,7 @@
 2. 使用方式：添加 canvas 标签 
 
 ## 06. 最新的 HTML5 标准的API是什么
-* Canvas：Canvas 由 HTML 代码中定义的具有高度和宽度属性的可绘制区域组成。JavaScript代码可以通过一组完整的绘图函数访问该区域，这与其他常见的 2D API 类似，因此允许动态生成图形。Canvas 的一些预期用途包括构建图形、动画、游戏和图像合成
+* Canvas：Canvas 由 HTML 代码中定义的具有高度和宽度属性的可绘制区域组成。JavaScript 代码可以通过一组完整的绘图函数访问该区域，这与其他常见的 2D API 类似，因此允许动态生成图形。Canvas 的一些预期用途包括构建图形、动画、游戏和图像合成
 * 媒体定时回访
 * 离线存储数据库
 * 文档编辑
@@ -85,15 +85,13 @@
 
 ## 02. script 标签为什么要放在body标签的底部（defer、async）
 *   因为浏览器在渲染html的时候是从上到下执行的，当遇到js文件的时候就会停止当前页面的渲染，转而去下载js文件，
-*   如果将script标签放在头部，在文件很大的情况下将导致首屏加载时间延长，影响用户体验。
-    
+*   如果将 script 标签放在头部，在文件很大的情况下将导致首屏加载时间延长，影响用户体验。
 *   解决办法：
-    1. 将script标签放在body的底部
-    2. 通过defer、async属性将js文件转为异步加载
-
+    1. 将 script 标签放在body的底部
+    2. 通过 defer、async 属性将 js 文件转为异步加载
 *   注意：
         defer和async的区别：首先都是实现js文件的异步加载，不阻塞页面的渲染；
-        区别就是defer必须等到整个文档渲染完成后才执行，而async在加载完成后，会暂停html的解析，转去执行js
+        区别就是defer必须等到整个文档渲染完成后才执行，而async在加载完成后，会暂停html的解析，转去执行 js
 
 ## 03. 页面导入样式时，使用 link 和 @import 有什么区别
 1. link 属于 HTML 标签，而 @import 是 CSS 提供的
