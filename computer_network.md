@@ -300,7 +300,7 @@
     1. 通常浏览器允许进行跨域写操作（Cross-origin writes），如链接，重定向
     2. 通常浏览器允许跨域资源嵌入（Cross-origin embedding），如 img、script 标签
     3. 通常浏览器不允许跨域读操作（Cross-origin reads）
-## 02. 实现跨域 常用的三种方式（JSONP、CORS、postMessage、代理）
+## 02. 实现跨域 常用的四种方式（JSONP、CORS、postMessage、代理）
 * jsonp: 带有src属性的标签都可以用来， 但是只能处理GET请求
 * document.domain + iframe跨域
 * location.hash + iframe
