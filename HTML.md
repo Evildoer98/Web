@@ -3,34 +3,25 @@
 * HTML5 语义化标签是指正确的标签包含了正确的内容，接口良好，比如nva表示导航条，类似的还有article、header、footer等等标签
 ### 01. 新特性
 *   新增语义化标签：nav、header、footer、aside、section、article、details、summary、dialog
-
 *   音频、视频标签：audio、video
-
 *   数据存储：localStorage(持久保存)、sessionStorage(临时存储)
-
 *   canvas（画布）、Geolocation（地理定位）、websocket（通信协议）
-
 *   input标签新增属性：placeholder、autocomplete、autofocus、required
-
-*   拖拽释放：drag、drop
-    
+*   拖拽释放：drag、drop  
 *   webworker(创建子线程)、websocket(长连接)
-
 *   history API
-        go、forward、back、pushstate
-        应用：vue编程式导航的灵感来源；vue-router的history模式。
+    * go、forward、back、pushstate
+    * 应用：vue编程式导航的灵感来源；vue-router的history模式。
 
 ### 2. 移除的元素
 *   纯表现的元素：basefont、big、center、font、s、strike、tt、u
 *   对可用性产生负面影响的元素：frame、frameset、noframes
 
 ## 02. DOCTYPE标签
-    DOCTYPE声明于文档最前面，告诉浏览器以何种方式来渲染页面。
-    HTML5中的声明方式如下：
-
-      !DOCTYPE html  使用最新的HTML5标准来解析渲染页面
-    如果不写，就会进入混杂模式
-
+*   DOCTYPE声明于文档最前面，告诉浏览器以何种方式来渲染页面。
+    * HTML5中的声明方式如下：
+      * !DOCTYPE html  使用最新的HTML5标准来解析渲染页面
+    * 如果不写，就会进入混杂模式
 * 严格模式：标准模式，指浏览器按照 W3C 标准解析代码
 * 混杂模式：怪异模式、兼容模式，指浏览器用自己的方式解析代码，混杂模式通常模拟老式浏览器的行为，以防止老站点无法工作
 
@@ -149,7 +140,7 @@
 3. h1 标签控制一段文字
 
 ### b 与 strong
-1.   b  为了加粗而加粗，  strong  为了标明重点而加粗
+1. b  为了加粗而加粗，  strong  为了标明重点而加粗
 2. 区别：一个是物理元素，一个是逻辑元素
     1. 物理元素所强调的是一种物理行为，比如把一段文字用 b 标记加粗了，浏览器加粗了这段文字，单纯的加粗，没有其他任何作用
     2. Strong 是强调，向浏览器传递强调某段文字的信息，而这个 Strong 就是逻辑元素，强调文档逻辑的，并非是通知浏览器应该如何显示
@@ -158,8 +149,8 @@
 1. i 是 Italic（斜体），而 em 是 emphasize（强调）
 
 ### 综上
-    物理元素是告诉浏览器以何种格式显示文字
-    逻辑元素是告诉浏览器有怎么样的重要性
+* 物理元素是告诉浏览器以何种格式显示文字
+* 逻辑元素是告诉浏览器有怎么样的重要性
 
 ## 06. display:inline、block、inline-block 的区别
 01. display:block 就是将元素显示为块级元素
@@ -177,8 +168,7 @@
 03. display:inline-block 将对象呈递为内联对象，但是对象的内容作为块对象呈递。旁边的内联对象会被呈递在同一行，允许空格
     * inline-block 元素的特点
         1. 将对象呈递为内联对象，但是对象的内容作为块对象呈递
-        2. 旁边的内联对象会被呈递在同一行内，允许空格
-        （应用此特性的元素呈现为内联对象，周围元素保持在同一行，但可以设置宽度和高度的块元素的元素）
+        2. 旁边的内联对象会被呈递在同一行内，允许空格（应用此特性的元素呈现为内联对象，周围元素保持在同一行，但可以设置宽度和高度的块元素的元素）
 
 ## 07. 实现一个圆形的可点击区域
 1. map + area 或者 svg
@@ -266,8 +256,8 @@
     浏览器直接使用离线缓存的资源
 
 ## 04. HTML 应用程序缓存和 HTML 浏览器缓存有什么区别
-    新的 HTML5 规范的应用缓存最关键的就是 支持离线应用，允许浏览器在连接客户端时预取一些或全部网站资产，如 HTML 文件，图像、css以及js等，预取文件加速了站点的性能。
-    换句话说，引用程序缓存可以预取完全未被访问的页面，从而在常规的浏览器缓存中不可用，与传统浏览器缓存比较，该性能并不强制要求用户访问网站
+* 新的 HTML5 规范的应用缓存最关键的就是 支持离线应用，允许浏览器在连接客户端时预取一些或全部网站资产，如 HTML 文件，图像、css以及js等，预取文件加速了站点的性能。
+* 换句话说，引用程序缓存可以预取完全未被访问的页面，从而在常规的浏览器缓存中不可用，与传统浏览器缓存比较，该性能并不强制要求用户访问网站
 
 # 通信
 ## 如何实现浏览器内多个标签页之间的通信？
@@ -295,26 +285,24 @@
 # 其他
 ## 01. 网页制作会用到的图片格式有那些？
 *   png-8，png-24，jpeg，gif，svg　
-    但是上面的那些都不是面试官想要的最后答案。面试官希望听到是Webp,Apng。（是否有关注新技术，新鲜事物）　　
-    科普一下：
-*   Webp：WebP格式，谷歌（google）开发的一种旨在加快图片加载速度的图片格式。图片压缩体积大约只有JPEG的2/3，并能节省大量的服务器带宽资源和数据空间。
-         Facebook Ebay等知名网站已经开始测试并使用WebP格式。在质量相同的情况下，WebP格式图像的体积要比JPEG格式图像小40%。　　
-*   Apng：全称是“Animated Portable Network Graphics”,是PNG的位图动画扩展，可以实现png格式的动态图片效果。
-    04年诞生，但一直得不到各大浏览器厂商的支持，直到日前得到 iOS safari 8的支持，有望代替GIF成为下一代动态图标准。
+*   但是上面的那些都不是面试官想要的最后答案。面试官希望听到是Webp,Apng。（是否有关注新技术，新鲜事物）　　
+    * 科普一下：
+        *   Webp：WebP格式，谷歌（google）开发的一种旨在加快图片加载速度的图片格式。图片压缩体积大约只有JPEG的2/3，并能节省大量的服务器带宽资源和数据空间。Facebook Ebay等知名网站已经开始测试并使用WebP格式。在质量相同的情况下，WebP格式图像的体积要比JPEG格式图像小40%。　　
+        *   Apng：全称是“Animated Portable Network Graphics”,是PNG的位图动画扩展，可以实现png格式的动态图片效果。04年诞生，但一直得不到各大浏览器厂商的支持，直到日前得到 iOS safari 8的支持，有望代替GIF成为下一代动态图标准。
 
 ## 02. 阻止事件冒泡&取消默认行为
-*    阻止事件冒泡
-        w3c：e.stopPropagation()
-        ie9以下：e.cancelBubble = true
-*    取消默认行为
-        w3c：e.preventDefault()
-        ie：e.returnValue = false
-*    return false
-        js：取消默认行为
-        jQuery：阻止冒泡 + 取消默认行为
-*     vue方法（修饰符）
-        阻止事件冒泡：@click.stop
-        取消默认行为：@click.prevent
+* 阻止事件冒泡
+    1. w3c：e.stopPropagation()
+    2. ie9以下：e.cancelBubble = true
+* 取消默认行为
+    1. w3c：e.preventDefault()
+    2. ie：e.returnValue = false
+* return false
+    1. js：取消默认行为
+    2. jQuery：阻止冒泡 + 取消默认行为
+* vue方法（修饰符）
+    1. 阻止事件冒泡：@click.stop
+    2. 取消默认行为：@click.prevent
 
 ## 03. 从输入网址（URL）到页面显示的过程？(一次完整的http请求)
 *    域名解析，对输入的url进行dns域名解析，得到对应的ip地址
