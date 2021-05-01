@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const uniq1 = function (arr) {
+            return arr.reduce((cur, next) => cur.indexOf(next) !== -1 ? cur : [...cur, next], [])
+        }
+        // 法二
+        // 该方法执行速度比任何其他方法都快，就是占用内存大
+        // 思路：
+        // 1. 新建一 js 对象以及新数组，遍历传入数组时，判断值是否为 js 对象的键
+        // 2. 不是的话给对象新增该键并放入新数组
+        // 注意：
+        // 判断是否为 js 对象键时，会自动对传入的键执行“toString()”
+        // 不同的键可能会被误认为一样，例如 n[val] -- n[1]、n["1"]
+        // 解决上述问题还是得调用“indexOf”
+        var obj = {}
+        const uniq2 = function (arr) {
+            return arr.reduce((cur, next) => obj[next] ? cur : obj[next] = true && [...cur, next], [])
+        }
+
+        // 排序相邻去重
+        // 有缺陷
+        // [1, 2, 3, 4, 0, 5, 4, 0, 9, 10]
+        const uniq3 = function (arr) {
+            return arr.sort((a, b) => a > b).reduce((cur, next) => cur[cur.length - 1] === next ? cur : [...cur, next], [])
+        }
+
+        // 数组下标法
+        const uniq4 = function (arr) {
+            return arr.reduce((cur, next, i) => arr.indexOf(next) !== i ? cur : [...cur, next], [])
+        }
+
+        // Set集合
+        const uniq5 = function (arr) {
+            return [...new Set(arr)]
+        }
+        var arr = [1,2,2,3,4,4,0,5,4,0,9,10]
+        console.log(uniq1(arr));
+        console.log(uniq2(arr));
+        console.log(uniq3(arr));
+        console.log(uniq4(arr));
+        console.log(uniq5(arr));
+    </script>
+</body>
+</html>

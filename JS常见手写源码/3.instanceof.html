@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const myInstanceOf = function (right, left) {
+            right = right.__proto__
+            left = left.prototype
+            while(true) {
+                if (right === null) {
+                    return false
+                }
+                if (right === left) {
+                    return true
+                }
+                right = right.__proto__
+            }
+        }
+        console.log(isInstanceof([],Array));
+        console.log(f1([],Array));
+        console.log(Object.prototype.toString.call(null));
+        console.log(Object.prototype.toString.call(1));
+        console.log(Object.prototype.toString.call(false));
+        console.log(Object.prototype.toString.call([]));
+        console.log(Object.prototype.toString.call(function(){}));
+        
+    </script>
+</body>
+</html>

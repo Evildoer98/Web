@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const deepcopy = function deepCopy (obj) {
+            if (!obj instanceof Object) {
+                return 
+            }
+            // 判断赋值的目标是对象还是数组
+            const copy = obj instanceof Array ? [] : {}
+            // 遍历目标
+            for(let key in obj) {
+                // hasOwnProperty()方法用来判断某个对象是否含有指定的自身属性
+                if (obj.hasOwnProperty(key)) {
+                    copy[key] = typeof obj[key] === 'object' ? deepCopy(obj[key]) : obj[key]
+                }
+            }
+            return copy
+        }
+
+        const deepcopy2 = function deepCopy2 (obj) {
+            var copy = {}
+            try {
+                copy = JSON.parse(JSON.stringify(obj))
+            } catch (error) {
+                
+            }
+            return copy
+        }
+        
+        const newObj = deepCopy(source)
+        console.log(newObj.meta.ary[2] === source.meta.ary[2]); // false
+        console.log(newObj.meta.birth === source.meta.birth); // false
+    </script>
+</body>
+</html>

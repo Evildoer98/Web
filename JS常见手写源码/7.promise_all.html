@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /**
+         * promiseAll 特点：
+         * 1. 入参是个由 Promises 实例组成的数组
+         * 2. 返回值是个 Promise ，因为可以使用 .then
+         * 3. 如果全部成功，状态变为 resolved，并且返回值组成一个数组传给回调
+         * 4. 但凡有一个失败，状态变为 rejected，并将 error 返回给回调
+         */
+        const promiseAll = function PromiseAll (promises) {
+           return new Promise((resolve, reject) => {
+               let result = []
+               let count = 0
+               promises.forEach((promise, index) => {
+                   promise.then((res) => {
+                        result[index] = res
+                        if (++count === promises.length) {
+                            resolve(result)
+                        }
+                   }, (err) => {
+                       reject(err)
+                   })
+               })
+           })
+        }
+    </script>
+</body>
+</html>

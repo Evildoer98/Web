@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id = "bt">点我</button>
+    <script>
+        // 不管事件被调用多少次，函数调用总是按照规定的时间运行
+        const f1 = function (Func, ms){
+            let canRun = true
+            return function (...args){
+                if (!canRun) {
+                    return 
+                }
+                canRun = false
+                setTimeout(() => {
+                    Func.apply(this, args)
+                    canRun = true
+                }, ms);
+            }
+        }
+         // 测试
+        const task = () => { console.log('run task') }
+        const throttleTask = throttle(task, 1000)
+        var cl = document.getElementById('bt')
+        cl.addEventListener('click',throttleTask)
+    </script>
+</body>
+</html>
