@@ -241,4 +241,215 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
         ![3_1](./src/image/ES_images/ES6_images/3_1.jpg)![3_2](./src/image/ES_images/ES6_images/3_2.jpg)
     
 ## 5. 模板字符串
+* ES6 引入新的声明字符串的方式
+1. 声明
+```javascript
+    let str = `我是一个字符串`
+    console.log(str, typeof str) // 我是一个字符串 string
+```
+2. 内容中可以直接出现换行符
+```javascript
+    let str = `<ul>
+                <li>沈腾</li>
+                <li>玛丽</li>
+                <li>魏翔</li>
+                <li>艾伦</li>
+                </ul>`;
+```
+3. 变量拼接
+```javascript 
+    let star = '小星星'
+    let out = `${star} 是个人`
+    console.log(out) // 小星星是个人
+```
+* 在 ES6 中通过 ${} 就可以完成字串符的拼接，只需要将变量放在大括号中即可
 
+## 6. 解构赋值
+* ES6 允许按照一定模式从数组和对象中提取值，对变量进行赋值
+1. 数组的解构：
+    * 从数组中获取值并赋值到变量中，变量的顺序与数组中对象顺序对应
+    ```javascript
+        const F4 = ['小沈阳','刘能','赵四','宋小宝']
+        let [xiao, liu, zhao, song] = F4
+        console.log(xiao) // 小沈阳
+        console.log(liu) // 刘能
+        console.log(zhao) // 赵四
+        console.log(song) // 宋小宝
+
+        var foo = ['one', 'two', 'three', 'four']
+        var [one, two, three] = foo
+        console.log(one) // one
+        console.log(two) // two
+        console.log(three) // three
+
+        // 如果要忽略某些值，可以按照下面的写法获取需要的值
+        var [first, , ,last] = foo
+        console.log(first) // one
+        console.log(last) // four
+
+        var a, b
+        [a, b] = [1, 2]
+        console.log(a) // 1
+        console.log(b) // 2
+    ```
+    * 如果没有从数组中获取到值，你可以为变量设置一个默认值
+    ```javascript
+        var a, b
+        [a = 5, b = 7] = [1]
+        console.log(a) // 5
+        console.log(b) // 7
+    ```
+    * 通过解构赋值可以方便交换两个变量的值
+    ```javascript
+        var a = 1
+        var b = 5
+        [a, b] = [b, a]
+        console.log(a) // 1
+        console.log(b) // 5
+    ```
+
+2. 对象的解构
+```javascript
+    const zhao = {
+        name: '赵本山',
+        age: '不详',
+        xiaopin: function () {
+            console.log('我可以演小品')
+        }
+    }
+    let {name, age, xiaopin} = zhao
+    console.log(name) // 赵本山
+    console.log(age) // 不详
+    console.log(xiaopin) // f () { console.log('我可以演小品') }
+    console.log(xiaopin()) // 我可以演小品
+```
+
+## 7. 拓展运算符
+* 拓展运算符 ... 可以在函数调用/数组构造时，将数组表达式或者 string 在语法层面展开，还可以构造对象时，将对象表达式按 key-value 的方式展开
+* 语法：
+    * 函数调用：myfunction(...iterableObj)
+    * 数组构造或字符串：[...iterableObj, '4', ...'hello', 6]
+    * 构造对象时，进行克隆或者属性拷贝：let objClone = {...obj}
+* 应用场景
+    * 在函数调用时使用拓展运算符
+    ```javascript
+        function sum (x, y, z) {
+            return x + y + z
+        }
+        const numbers = [1, 2, 3]
+        // 不使用拓展运算符
+        console.log(sum.apply(null, numbers)) // 6
+        // 使用拓展运算符
+        console.log(sum(...numbers)) // 6
+    ```
+
+    * 构造数组
+        * 没有展开语法的时候，只能组合使用 push、splice、concat 等方法，来将已有数组元素变成新数组的一部分。有了展开语法，构造新数组会变得更简单、更优雅
+        * 和参数列表的展开类似，...在构造数组时，可以在任意位置多次使用
+    ```javascript
+        const students = ['john', 'tom']
+        const persons = ['alice', ...students, 'bob', 'baby']
+        console.log(presons) // 'alice', 'john', 'tom', 'bob', 'baby'
+    ```
+
+    * 数组拷贝
+        * 展开语法和 Object.assign() 行为一致，执行的都是浅拷贝（只遍历一层）
+    ```javascript 
+        var arr = [1, 2, 3]
+        var arr2 = [...arr] // 等同于 arr.slice()
+        arr2.push(4)
+        console.log(arr2) // [1, 2, 3, 4]
+    ```
+
+    * 连接多个数组
+    ```javascript
+        var arr1 = [0, 1, 2]
+        var arr2 = [3, 4, 5]
+        var arr3 = [...arr1, ...arr2] // 将 arr 中所有元素附加到 arr1 后面并返回
+        // 等同于
+        var arr4 = arr1.concat(arr2)
+    ```
+
+    * 对象
+    ```javascript
+        var obj1 = {foo: 'hello', x: 18}
+        var obj2 = {foo: 'world', x: 20}
+
+        var cloneObj = {...obj1} // 克隆后对象：{foo: 'hello', x: 18}
+        var mergeObj = {...obj1, ...obj2} // 合并后的对象：{foo: 'world', x: 18, y: 20}
+    ```
+
+## 8. 对象属性简写
+* 在 ES6 中允许我们在设置一个对象的属性的时候不指定属性名
+* 不使用 ES6
+    ```javascript
+        const name = 'ming',
+              age = 18,
+              city = '成都'
+
+        const student = {
+            name: name, 
+            age: age,
+            city: city
+        }
+        console.log(student) // {name: 'ming', age: 18, city: '成都'}
+    ```
+* 使用 ES6
+    ```javascript
+        const name = 'ming',
+              age = 18,
+              city = '成都'
+
+        const student = {
+            name,
+            age,
+            city
+        }
+        console.log(student) // {name: 'name', age: 18, city: '成都'}
+
+    ```
+
+## 9. Promise
+* Promise 是异步编程的一种解决方案，比传统的解决方案 callback 更加的优雅。它最早由社区提出和实现的，ES6 将其写进了语言标准，统一了用法，原生提供了 Promise 对象
+* 不使用 ES6
+    * 嵌套两个 settimeout 回调函数
+    ```javascript
+        setTimeout(function (){
+            console.log('Hello') // 1 秒后输出 'hello'
+            setTimeout(function () {
+                console.log('world') // 2 秒后输出 'world'
+            }, 1000)
+        }, 1000)
+    ```
+* 使用 ES6
+    * 两个 then 来进行一步编程串行化，避免了回调地狱
+    ```javascript
+        var waitSecond = new Promise (function (resolve, reject) {
+            setTimeout(resolve, 1000)
+        })
+        waitSecond.then(function () {
+            console.log('hello') // 1 秒后输出 'hello'
+            return waitSecond
+        })
+        .then(function () {
+            console.log('world') // 2 秒后输出 'world'
+        })
+
+    ```
+
+## 10. 支持 let 与 const
+* 在之前 JS 是没有块级作用域，const 与 let 都是块级作用域
+* 使用 var 定义的变量为函数级作用域
+    ```javascript
+        {
+            var a = 10
+        }
+        console.log(a) // 10
+    ```
+* 使用 let 与 const 定义的变量为块级作用域
+    ```javascript
+        {
+            let a = 10
+        }
+        console.log(a) // Uncaught ReferenceError: a is not defined
+    ```
