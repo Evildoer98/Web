@@ -453,3 +453,59 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
         }
         console.log(a) // Uncaught ReferenceError: a is not defined
     ```
+
+# ES7
+* 数组 includes() 方法，用来判断一个数组是否包含一个指定的值，根据情况，如果包含则返回 true，否则返回 false
+* a ** b 指数运算符，它与 Math.pow(a, b)
+## 1. Array.prototype.includes()
+* includes() 函数用来判断一个数组是否包含一个指定的值，如果包含则返回 true，否则返回 false
+* includes() 函数与 indexOf 函数很相似，下面两个表达式是等价的：
+    ```javascript
+        arr.include(x)
+        arr.indexOf(x) >= 0
+    ```
+* 在 ES7 之前的做法
+    * indexOf() 验证数组中是否存在某个元素，这时需要根据返回值是否为 -1 来判断
+    ```javascript
+        let arr = ['react', 'angular', 'vue']
+        if (arr.indexOf('react') !== -1) {
+            console.log(' react 存在 ')
+            return true
+        } else {
+            console.log(' react 不存在 ')
+            return false
+        }
+    ```
+* 在 ES7 的includes()
+    * 使用 includes() 验证数组中是否存在某个元素
+    ```javascript
+        let arr = ['react', 'angular', 'vue']
+        if (arr.includes('react')) {
+            console.log(' react 存在 ')
+            return true
+        } else {
+            console.log(' react 不存在 ')
+            return false
+        }
+    ```
+
+## 2. 指数操作符
+* 在 ES7 中引入了指数运算符 ** ， ** 具有与 Math.pow(...) 等效的计算结果
+* 不使用指数操作符
+    * 使用自定义的递归函数 calculateExponent 或者 Math.pow() 进行指数运算
+    ```javascript
+        function calculateExponent (base, exponent) {
+            if (exponent === 1) {
+                return base
+            } else {
+                return base * calculateExponent(base, exponent - 1)
+            }
+        }
+        console.log(calculateExponent(2, 10)) // 1024
+        console.log(Math.pow(2, 10)) // 1024
+    ```
+* 使用指数操作符
+    * 使用指数运算符 ** ，就像 + 、- 等操作符一样
+    ```javascript
+        console.log(2**10) // 1024
+    ```
