@@ -27,7 +27,7 @@
     Huawei.call()
     console.log(Huawei)
 ```
-![类1](./src/image/ES_images/ES6_images/类1.jpg)
+![1_1](./src/image/ES_images/ES6_images/1_1.jpg)
 
 2. 不使用 class（类）继承
 ```javascript
@@ -69,7 +69,7 @@
         chuizi.playGame()
 
 ```
-![类2](./src/image/ES_images/ES6_images/类2.jpg)
+![1_2](./src/image/ES_images/ES6_images/1_2.jpg)
 
 3. 使用class（类）
     * 构造函数在实例化的时候将会被调用，如果不指定，那么就会有一个不带参数的默认构造函数
@@ -88,7 +88,7 @@
     console.log(onePlus);
     console.log(onePlus.call());
 ```
-![类3](./src/image/ES_images/ES6_images/类3.jpg)
+![1_3](./src/image/ES_images/ES6_images/1_3.jpg)
 
 4. 使用类继承
     * 子类必须要在 constructor 中指定 super 函数，否则在新建实例的时候会报错
@@ -108,7 +108,7 @@
     console.log(vivox);
     console.log(vivox.toString());
 ```
-![类4](./src/image/ES_images/ES6_images/类4.jpg)
+![1_4](./src/image/ES_images/ES6_images/1_4.jpg)
 
 5. class 的 get 和 set 
 ```javascript
@@ -125,7 +125,7 @@
     console.log(oppo.price)
     oppo.price = 'free'
 ```
-![类5](./src/image/ES_images/ES6_images/类5.jpg)
+![1_5](./src/image/ES_images/ES6_images/1_5.jpg)
 
 6. class 的静态成员
 ```javascript
@@ -141,7 +141,7 @@
     console.log(nokia.name);
     console.log(Phone.name);
 ```
-![类6](./src/image/ES_images/ES6_images/类6.jpg)
+![1_6](./src/image/ES_images/ES6_images/1_6.jpg)
 
 ## 2. 模块化
 * ES5 不支持原生的模块化，在 ES6 中模块作为重要的组成部分被添加进来。模块的功能主要由 export 和 import 组成。每一个模块都有自己单独的作用域，模块之间的相互调用关系是通过 export 来规定模块对外暴露的接口，通过 import 来引用其他模块提供的接口。同时还为模块创造了命名空间，防止函数的命名冲突
