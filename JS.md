@@ -1,53 +1,168 @@
 # 数据类型
+* JavaScript 是一种弱类型/动态语言。这意味着不用提前声明变量的类型，在程序运行过程中，类型会被自动确定。这意味着可以使用同一个变量保存不同类型的数据
 ## 01. JS数据类型分为两大类，九个数据类型：
 1. 原始类型
-    * 分为七种类型，分为：  
-        boolean、number、null、undefined、string、symbol、bigint（大于2^53-1）
+    * 分为七种类型，分为：boolean、number、null、undefined、string、symbol、bigint（大于2^53-1）
+        * undefined：typeof instance === "undefined"
+        * Boolean：typeof instance === "boolean"
+        * Number：typeof instance === "number"
+        * String：typeof instance === "string"
+        * BigInt：typeof instance === "bigint"
+        * Symbol：typeof instance === "symbol"
+        * Null：typeof instance === "object" (至于为什么是 object ，原因在后续中)
     *   BigInt数据类型的目的是比Number数据类型支持的范围更大的整数值。在对大整数执行数学运算时，以任意精度表示整数的能力尤为重要。使用BigInt，整数溢出将不再是问题。
 2. 对象类型
     * 分为两种，分为:   
-        Object（Array、RegExp、Math、Map、Set）
-        Function
+        * Object（Array、RegExp、Math、Map、Set）
+        * Function
 3.  |数据类型	 |基本数据类型	 |引用数据类型|
     |----       |----          |----       |
     |储存的元素  | 	值	        |地址 (指针) |
     |储存的地点	 |  栈	        |    堆     |
 
 ## 02. == 和 === 的区别
-1. ===：三个等号我们称为等同符，当等号两边的值为相同类型的时候，直接比较等号两边的值，值相同则返回true，若等号两边的值类型不同时直接返回false。
-2. ==：两个等号我们称为等值符，当等号两边的值为相同类型时比较值是否相同，类型不同时会发生类型的自动转换，转换为相同的类型后再作比较。
+* 全等运算符（ === 和 !== ）：当等号两边的值为相同类型的时候，直接比较等号两边的值，值相同则返回true，若等号两边的值类型不同时直接返回false
+    1. 如果操作数的类型不同，则返回 false
+    2. 如果两个操作数都是对象，只有当它们指向同一个对象时才返回 true
+    3. 如果两个操作数都为 null，或者两个操作数都为 undefined，返回 true
+    4. 如果两个操作数有任意一个为 NaN，返回 false
+    * 否则，比较两个操作数的值：
+        1. 数字类型必须拥有相同的数值。+0 和 -0 会被认为是相同的值
+        2. 字符串类型必须拥有相同顺序的相同字符
+        3. 布尔运算符必须同时为 true 或同时为 false
+* 相等运算符（ == 和 !=）：当等号两边的值为相同类型时比较值是否相同，类型不同时会发生类型的自动转换，转换为相同的类型后再作比较
+    1. 如果两个操作数都是对象，则仅当两个操作数都引用同一个对象时才返回 true
+    2. 如果一个操作数是 null，另一个操作数是 undefined，则返回 true
+    3. 如果两个操作数是不同类型的，就会尝试将字符串转换为数字值
+        * 当数字和字符串进行比较时，会尝试将字符串转换为数字值
+        * 如果操作数之一是 Boolean，则将布尔操作数转换为 1 或者 0
+            * 如果是 true，则转换为 1
+            * 如果是 false，则转换为 0
+        * 如果操作数之一是对象，另外一个是数字或字符串，会尝试使用对象的 valueOf() 和 toString() 方法将对象转换为原始值
+    4. 如果操作数具有相同的类型，则将它们进行如下比较：
+        * String：true 仅当两个操作数具有相同顺序的相同字符串时才返回
+        * Number：true 仅当两个操作数具有相同的值时才返回。+0 和 -0 被视为相同的值。如果任一操作数为 NaN，则返回 false
+        * Boolean：true 仅当操作数为两个 true 或两个 false 时才返回 true
 * 类型转换规则：
     1. 如果等号两边是boolean、string、number三者中任意两者进行比较时，优先转换为数字进行比较。
     2. 如果等号两边出现了null或undefined,null和undefined除了和自己相等
 
 ## 03. Symbol 的作用
-1. 首先 Symbol 是基本类型之一，symbol 是一种无法被重建的基本类型。这时 symbol 有点类似与对象创建的实例互相不相等的情况，但同时 symbol 有事一种无法被改变的基本类型数据数据
-2.  ```javascript
-       const s1 = Symbol()
-       const s2 = Symbol()
-       console.log(s1 === s2)  // false
+1. Symbol 值通过 Symbol 函数生成，使用 typeof，结果为 “symbol”
+    ```javascript
+        var s = Symbol('foo')
+        console.log(typeof s) // Symbol
     ```
-    可以看到 symbol 创建出来的值互不相同，即使传入相同的参数，也不相同。
-    注意：symbol 不是被实例化出来的，不用 new 创建
-* 作用：作为对象的属性名，可以保证属性名不会重复
-* 注意：symbol 不能通过 for...in...遍历出来；若想获取，可以通过Object.getOwnPropertySymbols()来获取
+2. Symbol 函数前不能使用 new 命令，否则会报错。这是因为生成的 Symbol 是一个原始类型的值，不是对象
+3. instanceof 的结果为 false
+    ```javascript
+        var s = Symbol('foo')
+        console.log(s instanceof Symbol) // false
+    ```
+4. Symbol 函数可以接受一个字符串作为参数，表示对 Symbol 实例的描述，主要是为了在控制台显示，或者转化为字符串时，比较容易区分
+    ```javascript
+        var s = Symbol('foo')
+        console.log(s) // Symbol(foo)
+    ```
+5. 如果 Symbol 的参数是一个对象，就会调用该对象的 toString 方法，将其转为字符串，然后才生成一个 Symbol 值
+    ```javascript
+        const obj = {
+            toString () {
+                return 'hello'
+            }
+        }
+        const s = Symbol(obj)
+        console.log(s) // Symbol(hello)
+    ```
+6. Symbol 函数的参数只是表示对当前 Symbol 值的描述，相同参数的 Symbol 函数的返回值是不相等的
+    ```javascript
+        // 没有参数的情况下
+        var s1 = Symbol()
+        var s2 = Symbol()
+        console.log(s1 === s2) // false
+
+        // 有参数的情况下
+        var s1 = Symbol('foo')
+        var s2 = Symbol('foo')
+        consoloe.log(s1 === s2) // false
+    ```
+7. Symbol 值不能与其他类型的值进行运算，会报错
+    ```javascript
+        var s = Symbol('hello')
+        console.log('test' + s) // Uncaught TypeError: Cannot convert a Symbol value to a string
+    ```
+8. Symbol 值可以显示转为字符串
+    ```javascript
+        var s = Symbol('hello')
+        console.log(String(s)) // Symbol(hello)
+        console.log(s.toString()) // Symbol(hello)
+    ```
+9. Symbol 值可以作为标识符，用于对象的属性名，可以保证不会出现同名的属性
+    ```javascript
+        var s = Symbol()
+        // 情况1
+        var a = {}
+        a[s] = 'hello'
+
+        // 情况2
+        var b = {
+            [s]: 'hello'
+        }
+
+        // 情况3
+        var a = {}
+        Object.defineProperty(a, s, {value: 'hello'})
+
+        // 以上写法的结果都是一样的
+        console.log(a[mySymbol]); // "Hello!"
+    ```
+10. Symbol 作为属性名，该属性不会出现 for...in、for...of 循环中，也不会被 Object.keys()、Object.getOwnPropertyNames()、JSON.stringify() 返回。但是它不是私有属性，有一个 Object.getOwnPropertySymbols 方法，可以获取指定对象的所有 Symbol 属性名
+    ```javascript
+        var obj = {}
+        var a = Symbol('a')
+        var b = Symbol('b')
+
+        obj[a] = 'hello'
+        obj[b] = 'world'
+
+        var objectSymbols = Object.getOwnPropertySymbol(obj)
+
+        console.log(objectSymbols) // [Symbol(a), Symbol(b)]
+    ```
+11. 使用同一个 Symbol 值，可以使用 Symbol.for。接受一个字符串作为参数，然后搜索有没有以该参数作为名称的 Symbol 值。如果有，就返回这个 Symbol 值，否则就新建并返回一个以该字符串为名称的 Symbol 值
+    ```javascript
+        var s1 = Symbol.for('foo')
+        var s2 = Symbol.for('foo')
+        console.log(s1 === s2) // true
+    ```
+12. Symbol.keyFor 方法返回一个已登记的 Symbol 类型值的 key
+    ```javascript
+        var s1 = Symbol.for('foo')
+        console.log(Symbol.keyFor(s1)) // foo
+
+        var s2 = Symbol('foo')
+        console.log(Symbol.keyFor(s2)) // undefined
+    ```
+* 全局共享的 Symbol
+    * 要创建跨文件可用的 Symbol，甚至跨域（每个都有它自己的全局作用域），使用 Symbol.for() 方法和 Symbol.keyFor() 方法从全局的 Symbol 注册表设置和取得 Symbol
+
 
 ## 04. 0.1 + 0.2 !== 0.3
 *   因为 JS 采用 IEEE 754 双精度版本（64位）
 *   存在的问题的原因是：
-        浮点数用二进制表示的时候是无穷的，因为精度的问题，两个浮点数相加会造成截断丢失精度，因此再转换为十进制就出了问题
+    * 浮点数用二进制表示的时候是无穷的，因为精度的问题，两个浮点数相加会造成截断丢失精度，因此再转换为十进制就出了问题
 *   解决办法：
     1. ES6中，Number 有个新的属性 EPSILON，在计算机科学技术里面，这个词代表极小值
     2. toFixed(n) // n 代表保留几位小数
-        toFixed() 使用的是“银行家舍入法”。该方法又被称为“四舍六入五取偶法”或者“四舍六入五留双法”。
-        * 规则：
-            1. 大于等于4，直接舍去该位
-            2. 大于等于6，向前位进一
-            3. 等于5
-                5 后面有数，向前位进一
-                5 后全 0 
-                    5 前位数值为奇，则向前位进一（将前位凑成偶）
-                    5 前位数值为偶，则直接舍去该位
+        * toFixed() 使用的是“银行家舍入法”。该方法又被称为“四舍六入五取偶法”或者“四舍六入五留双法”。
+            * 规则：
+                1. 大于等于4，直接舍去该位
+                2. 大于等于6，向前位进一
+                3. 等于5
+                    * 5 后面有数，向前位进一
+                    * 5 后全 0 
+                        * 5 前位数值为奇，则向前位进一（将前位凑成偶）
+                        * 5 前位数值为偶，则直接舍去该位
     3. 最好使用 Math.floor(num * 100) / 100  （floor() 方法执行的是向下取整计算）
 
 ## 常见考点
@@ -58,8 +173,8 @@
 # 类型判断
 ## 01. typeof
 1. 原始类型除了 null，其他类型都可以通过 typeof 来判断
-2. typeof null 的值是 object，这是因为底层 null 机器码的低1-3位是 000
-    * 类型标签存储在单元的低位中（在变量的机器码的低位1-3位存储其类型信息）
+2. typeof null 的值是 object。因为 对象的类型标签是 0。由于 null 代表的是空指针（值为0x00），因此 null 的类型标签是 0
+    * 类型标签存储在单元的低位中
        1.  000 object   数据是对象的引用
        2.  1   int      数据是31位有符号整数
        3.  010 double   数据是对双浮点数的引用
@@ -67,6 +182,63 @@
        5.  110 boolean  数据是布尔值
 3. 如果要判断 null 类型的话直接 xxx === null 即可
 4. 对于对象类型来说，typeof 只能具体判断函数的类型是 function，其它均为object
+```javascript
+    // 数值
+    typeof 37 === 'number';
+    typeof 3.14 === 'number';
+    typeof(42) === 'number';
+    typeof Math.LN2 === 'number';
+    typeof Infinity === 'number';
+    typeof NaN === 'number'; // 尽管它是 "Not-A-Number" (非数值) 的缩写
+    typeof Number(1) === 'number'; // Number 会尝试把参数解析成数值
+
+    typeof 42n === 'bigint';
+
+    // 字符串
+    typeof '' === 'string';
+    typeof 'bla' === 'string';
+    typeof `template literal` === 'string';
+    typeof '1' === 'string'; // 注意内容为数字的字符串仍是字符串
+    typeof (typeof 1) === 'string'; // typeof 总是返回一个字符串
+    typeof String(1) === 'string'; // String 将任意值转换为字符串，比 toString 更安全
+
+    // 布尔值
+    typeof true === 'boolean';
+    typeof false === 'boolean';
+    typeof Boolean(1) === 'boolean'; // Boolean() 会基于参数是真值还是虚值进行转换
+    typeof !!(1) === 'boolean'; // 两次调用 ! (逻辑非) 操作符相当于 Boolean()
+
+    // Symbols
+    typeof Symbol() === 'symbol';
+    typeof Symbol('foo') === 'symbol';
+    typeof Symbol.iterator === 'symbol';
+
+    // Undefined
+    typeof undefined === 'undefined';
+    typeof declaredButUndefinedVariable === 'undefined';
+    typeof undeclaredVariable === 'undefined';
+
+    // 对象
+    typeof {a: 1} === 'object';
+
+    // 使用 Array.isArray 或者 Object.prototype.toString.call
+    // 区分数组和普通对象
+    typeof [1, 2, 4] === 'object';
+
+    typeof new Date() === 'object';
+    typeof /regex/ === 'object'; // 历史结果请参阅正则表达式部分
+
+    // 下面的例子令人迷惑，非常危险，没有用处。避免使用它们。
+    typeof new Boolean(true) === 'object';
+    typeof new Number(1) === 'object';
+    typeof new String('abc') === 'object';
+
+    // 函数
+    typeof function() {} === 'function';
+    typeof class C {} === 'function'
+    typeof Math.sin === 'function';
+
+```
 
 ## 02. instanceof
 1. instanceof 内部通过原型链的方式来判断是否为构建函数的实例，常用于判断具体的对象类型
