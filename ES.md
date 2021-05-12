@@ -31,7 +31,7 @@
 
 2. 不使用 class（类）继承
 ```javascript
-        //手机
+        // 手机
         function Phone(brand, price){
             this.brand = brand;
             this.price = price;
@@ -41,18 +41,18 @@
             console.log("我可以打电话");
         }
 
-        //智能手机
+        // 智能手机
         function SmartPhone(brand, price, color, size){
             Phone.call(this, brand, price);
             this.color = color;
             this.size = size;
         }
 
-        //设置子级构造函数的原型
+        // 设置子级构造函数的原型
         SmartPhone.prototype = new Phone;
         SmartPhone.prototype.constructor = SmartPhone;
 
-        //声明子类的方法
+        // 声明子类的方法
         SmartPhone.prototype.photo = function(){
             console.log("我可以拍照")
         }
@@ -75,10 +75,10 @@
     * 构造函数在实例化的时候将会被调用，如果不指定，那么就会有一个不带参数的默认构造函数
 ```javascript
     Class Shouji {
-        //构造方法 名字不能修改
+        // 构造方法 名字不能修改
         constuctor (brand, price) {
             this.brand = brand
-            this.price
+            this.price = price
         }
         call () {
             console.log('我可以打电话')
@@ -130,7 +130,7 @@
 6. class 的静态成员
 ```javascript
     class Phone{
-        //静态属性
+        // 静态属性
         static name = '手机';
         static change(){
             console.log("我可以改变世界");
@@ -140,6 +140,8 @@
     let nokia = new Phone();
     console.log(nokia.name);
     console.log(Phone.name);
+    console.log(Phone.change())
+    console.log(nokia.change())
 ```
 ![1_6](./src/image/ES_images/ES6_images/1_6.jpg)
 
@@ -643,7 +645,7 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
 
 ## 1. 异步迭代
 * 在 async/await 的某些时刻，可以在同步循环中调用异步函数
-* ES2018 引入异步迭代器（asynchronous iterators），这就像常规迭代器，除了 next() 方法返回一个 Promise。因此 await 可以和for...of循环一起使用，以串行的方式运行异步操作
+* ES2018 引入异步迭代器（asynchronous iterators），这就像常规迭代器，除了 next() 方法返回一个 Promise。因此 await 可以和 for...of 循环一起使用，以串行的方式运行异步操作
 * eg：
     ```javascript
         async function process(array) {
@@ -766,7 +768,7 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
         ```javascript
             const regLook = /(?<=\D)\d+/
             match = regLook.exec('$123.89')
-            console.log(match[0]) // 
+            console.log(match[0]) 
         ```
         ![5_2](./src/image/ES_images/ES9_images/5_2.jpg)
 * 以上是 肯定反向断言，非数字 \D 必须存在。同样的，还存在 否定反向断言，表示一个值必须不存在
@@ -804,14 +806,14 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
 * 更加友好的 JSON.stringify
 * 新增 Array 的 flat() 方法和 flatMap()
 * 新增 String 的 trimStart() 方法和 trimEnd() 方法
-* Object.fromEntries
-* Symbol.prototype.description
-* String.prototype.matchAll
+* Object.fromEntries()
+* Symbol.prototype.description()
+* String.prototype.matchAll()
 * Function.prototype.toString() 返回精确字符，包括空格和注释
 * 简化 try{} catch {}，修改 catch 绑定
 * 新的基本数据类型 BigInt
 * globalThis
-* import()
+* import
 * Legacy RegEx
 * 私有的实例方法和访问器
 ## 1. 行分隔符（U + 2028）和段分隔符（U + 2029）符号现在允许在字符串文字中，与 JSON 匹配
@@ -900,7 +902,7 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
         // Found foo. Next starts at 9.
         // Found foo. Next starts at 19.
     ```
-* 如果使用matchAll ，就可以不必使用while循环加exec方式（且正则表达式需使用／g标志）。使用matchAll 会得到一个迭代器的返回值，配合 for...of, array spread, or Array.from() 可以更方便实现功能：
+* 如果使用 matchAll，就可以不必使用 while 循环加 exec 方式（且正则表达式需使用 ／g 标志）。使用 matchAll 会得到一个迭代器的返回值，配合 for...of, array spread, or Array.from() 可以更方便实现功能：
     ```javascript
         const regexp = RegExp('foo*','g'); 
         const str = 'table football, foosball';
@@ -919,7 +921,7 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
         Array.from(matches, m => m[0]);
         // Array [ "foo", "foo" ]
     ``` 
-* matchAll可以更好的用于分组
+* matchAll 可以更好的用于分组
     ```javascript
         var regexp = /t(e)(st(\d?))/g
         var str = 'test1test2'
@@ -951,7 +953,7 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
 ```
 
 ## 9. 简化 try{} catch {}，修改 catch 绑定
-* 在 ES10 之前，我们必须通过语法为 catch 子句绑定异常变量，无论是否有必要。很多时候 catch 块是多余的。 ES10 提案使我们能够简单的把变量省略掉。
+* 在 ES10 之前，我们必须通过语法为 catch 子句绑定异常变量，无论是否有必要。很多时候 catch 块是多余的。 ES10 提案使我们能够简单的把变量省略掉
 * 之前是
     ```javascript
         try {} catch(e) {}
@@ -962,4 +964,4 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
     ```
 
 ## 10. 新的基本数据类型 BigInt
-* BigInt数据类型的目的是比Number数据类型支持的范围更大的整数值。在对大整数执行数学运算时，以任意精度表示整数的能力尤为重要。使用BigInt，整数溢出将不再是问题
+* BigInt 数据类型的目的是比 Number 数据类型支持的范围更大的整数值。在对大整数执行数学运算时，以任意精度表示整数的能力尤为重要。使用 BigInt，整数溢出将不再是问题
