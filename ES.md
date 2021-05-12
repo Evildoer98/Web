@@ -861,7 +861,7 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
 ## 4. 新增 String 的 trimStart() 方法和 trimEnd() 方法
 * 分别是去除字符串首尾空白字符
 
-## 5. Object.fromEntries
+## 5. Object.fromEntries()
 * Object.entries() 方法的作用是返回一个给定对象自身可枚举的键值对数组，其排列与使用 for...in 循环遍历该对象时返回的顺序一致（区别在于 for...in 循环也枚举原型链中的属性）
 * 而 Object.fromEntries() 则是 Object.entries() 的反转
 * Object.fromEntries() 函数传入一个键值对的列表，并返回一个带有这些键值对的新对象。这个迭代参数应该是一个能够实现 @iterator 方法的对象，返回一个迭代器对象。它生成一个具有两个元素的类似数组的对象，第一个元素是将用作属性键的值，第二个元素是该属性键关联的值
