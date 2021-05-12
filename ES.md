@@ -31,7 +31,7 @@
 
 2. 不使用 class（类）继承
 ```javascript
-    //手机
+        //手机
         function Phone(brand, price){
             this.brand = brand;
             this.price = price;
@@ -570,14 +570,14 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
 ## 4. String padding
 * 在 ES8 中 String 新增了两个实例函数 String.prototype.padStart 和 String.prototype.padEnd，允许将空字符串或其他字符串添加到原始字符串的开头或结尾
     ```javascript
-        String.padStart(targetLength, [padString])
+        String.padStart(targetLength, padString)
         String.padEnd(targetLength, padString) 
     ```
     * targetLength：当前字符串需要填充到的目标长度。如果这个数值小于当前字符串的长度，则返回当前字符串本身
     * padString（可选）：填充字符串。如果字符串太长，使填充后的长度超过了目标长度，则只保留最左侧的部分，其他部分会被截断，此参数的缺省值为 " "。
         ```javascript
             console.log('0.0'.padStart(4, '10')) // 10.0
-            console.log('0.0'.padStart(20)) // 0.00
+            console.log('0.0'.padStart(20)) //                 0.00
 
             console.log('0.0'.padEnd(4, '0')) // 0.00
             console.log('0.0'.padEnd(10, '0')) // 0.00000000
@@ -787,7 +787,7 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
         ```
 
 ## 7. 正则表达式 Unicode 转义
-* 到目前为止，在正则表达式中本地访问 Unicode 字符属性是不被允许的。ES2018 添加了 Unicode 属性转义——————形式为 \p{...} 和 \P{...}，在正则表达式中使用标记 u （unicode）设置，在 \p 块儿内，可以以键值对的方式设置需要匹配的属性而非具体内容
+* 到目前为止，在正则表达式中本地访问 Unicode 字符属性是不被允许的。ES2018 添加了 Unicode 属性转义—————形式为 \p{...} 和 \P{...}，在正则表达式中使用标记 u （unicode）设置，在 \p 块儿内，可以以键值对的方式设置需要匹配的属性而非具体内容
     * eg：
         ```javascript
             const reGreekSymbol = /\p{Script=Greek}/u;
@@ -798,3 +798,168 @@ ES6 将一个文件视为一个模块，上面的模块通过 export 向外输�
 ## 8. 非转义序列的模板字符串
 * \u 开始一个 unicode 转义，\x 开始一个十六进制转义，\ 后跟一个数字开始一个八进制转义。这使得创建特定的字符串变得不可能
     * eg：Windows 文件路径 C:\uuu\xxx\111
+
+# ES10
+* 行分隔符（U + 2028）和段分隔符（U + 2029）符号现在允许在字符串文字中，与 JSON 匹配
+* 更加友好的 JSON.stringify
+* 新增 Array 的 flat() 方法和 flatMap()
+* 新增 String 的 trimStart() 方法和 trimEnd() 方法
+* Object.fromEntries
+* Symbol.prototype.description
+* String.prototype.matchAll
+* Function.prototype.toString() 返回精确字符，包括空格和注释
+* 简化 try{} catch {}，修改 catch 绑定
+* 新的基本数据类型 BigInt
+* globalThis
+* import()
+* Legacy RegEx
+* 私有的实例方法和访问器
+## 1. 行分隔符（U + 2028）和段分隔符（U + 2029）符号现在允许在字符串文字中，与 JSON 匹配
+* 以前，这些符号在字符串文字中被视为行终止符，因此使用它们会导致SyntaxError异常。
+
+## 2. 更加友好的 JSON.stringify
+* 如果输入 Unicode 格式但是超出范围的字符，在原先 JSON.stringify 返回格式错误的 Unicode 字符串。现在实现了一个改变 JSON.stringify 的方法，因此它为其输出转义序列，使其成为有效的 Unicode （并以 UTF-8）
+
+## 3. 新增 Array 的 flat() 方法和 flatMap()
+* flat() 和 flatMap()
+### Array.prototype.flat()
+* flat() 方法会按照一个可指定的深度递归遍历数组，并将所有元素与遍历到的子数组中的元素合并为一个新的数组返回
+    * flat() 方法最基本的作用就是数组降维
+        ```javascript
+            var arr1 = [1, 2, [3, 4]];
+            arr1.flat() // [1, 2, 3, 4]
+
+            var arr2 = [1, 2, [3, 4, [5, 6]]];
+            arr2.flat() // [1, 2, 3, 4, [5, 6]]
+
+            var arr3 = [1, 2, [3, 4, [5, 6]]];
+            arr3.flat(2) // [1, 2, 3, 4, 5, 6]
+
+            //使用 Infinity 作为深度，展开任意深度的嵌套数组
+            arr3.flat(Infinity) // [1, 2, 3, 4, 5, 6]
+        ```
+    * 其次，还可以利用 flat() 方法的特性来去除数组的空项
+        ```javascript
+            var arr4 = [1, 2, , 4, 5]
+            arr4.flat() //[1, 2, 4, 5]
+        ```
+### Array.prototype.flatMap()
+* flatMap() 方法首先使用映射函数映射每个元素，然后将结果压缩成一个新的数组。它的 map 和 深度值1 的 flat 几乎相同，但 flatMap 通常在合并成一个方法的效率稍微高一些。
+    * map 方法和 flatMap() 方法做一个比较
+        ```javascript
+            var arr1 = [1, 2, 3, 4]
+            arr1.map(x => [x * 2]) // [[2], [4], [6], [8]]
+
+            arr1.flatMap(x => [x * 2]) // [2, 4, 6, 8]
+
+            // 只会将 flatMap 中的函数返回的数组'压平'一层
+            arr1.flatMap(x => [[x * 2]]) //  [[2], [4], [6], [8]]
+        ```
+
+## 4. 新增 String 的 trimStart() 方法和 trimEnd() 方法
+* 分别是去除字符串首尾空白字符
+
+## 5. Object.fromEntries
+* Object.entries() 方法的作用是返回一个给定对象自身可枚举的键值对数组，其排列与使用 for...in 循环遍历该对象时返回的顺序一致（区别在于 for...in 循环也枚举原型链中的属性）
+* 而 Object.fromEntries() 则是 Object.entries() 的反转
+* Object.fromEntries() 函数传入一个键值对的列表，并返回一个带有这些键值对的新对象。这个迭代参数应该是一个能够实现 @iterator 方法的对象，返回一个迭代器对象。它生成一个具有两个元素的类似数组的对象，第一个元素是将用作属性键的值，第二个元素是该属性键关联的值
+    * 通过 Object.fromEntries，可以将 Map 转化为 Object
+        ```javascript
+            const map = new Map([['foo', 'bar'], ['baz', 42]])
+            const obj = Object.fromEntries(map)
+            console.log(obj) // {foo: 'bar', baz: 42}
+        ```
+    * 通过 Object.fromEntries，可以将 Array 转化为 Object
+        ```javascript
+            const arr = [['0', 'a'], ['1', 'b'], ['2', 'c']]
+            const obj = Object.fromEntries(arr)
+            console.log(arr) // {0: 'a', 1: 'b', 2: 'c'}
+        ```
+## 6. Symbol.prototype.description
+* 通过工厂函数 Symbol() 创建符号时，可以选择通过参数提供字符串作为描述
+    ```javascript 
+        const sym = Symbol('Evildoer98')
+    ```
+* 在此之前，访问描述的唯一方法就是将符号转化为字符串
+    ```javascript
+        assert.equal(String(sym), 'Symbol(Evildoer98)')
+    ```
+* 现在引入 getter Symbol.prototype.description 直接访问描述
+    ```javascript
+        assert.equal(sym.description, 'Evildoer98')
+    ```
+
+## 7. String.prototype.matchAll()
+* matchAll() 方法返回一个包含所有正则表达式及分组捕获结果的迭代器。在 matchAll 出现之前，通过在循环中调用 regexp.exec 来获取所有匹配项信息
+    ```javascript
+        const regexp = RegExp('foo*', 'g')
+        const str = 'table football, foosball'
+        while ((matches = regexp.exec(str)) !== null) {
+            console.log(`Found ${matches[0]}. Next starts at ${regexp.lastIndex}.`);
+        }
+        // Found foo. Next starts at 9.
+        // Found foo. Next starts at 19.
+    ```
+* 如果使用matchAll ，就可以不必使用while循环加exec方式（且正则表达式需使用／g标志）。使用matchAll 会得到一个迭代器的返回值，配合 for...of, array spread, or Array.from() 可以更方便实现功能：
+    ```javascript
+        const regexp = RegExp('foo*','g'); 
+        const str = 'table football, foosball';
+        let matches = str.matchAll(regexp);
+
+        for (const match of matches) {
+        console.log(match);
+        }
+        // Array [ "foo" ]
+        // Array [ "foo" ]
+
+        // matches iterator is exhausted after the for..of iteration
+        // Call matchAll again to create a new iterator
+        matches = str.matchAll(regexp);
+
+        Array.from(matches, m => m[0]);
+        // Array [ "foo", "foo" ]
+    ``` 
+* matchAll可以更好的用于分组
+    ```javascript
+        var regexp = /t(e)(st(\d?))/g
+        var str = 'test1test2'
+        str.match(regexp)
+        // Array ['test1', 'test2']
+
+        let array = [...str.matchAll(regexp)];
+
+        array[0]
+        // ['test1', 'e', 'st1', '1', index: 0, input: 'test1test2', length: 4]
+        array[1]
+        // ['test2', 'e', 'st2', '2', index: 5, input: 'test1test2', length: 4]
+    ```
+
+## 8. Function.prototype.toString() 返回精确字符，包括空格和注释
+```javascript
+    function /* comment */ foo /* another comment */() {}
+
+    // 之前不会打印注释部分
+    console.log(foo.toString()); // function foo(){}
+
+    // ES2019 会把注释一同打印
+    console.log(foo.toString()); // function /* comment */ foo /* another comment */ (){}
+
+    // 箭头函数
+    const bar /* comment */ = /* another comment */ () => {};
+
+    console.log(bar.toString()); // () => {}
+```
+
+## 9. 简化 try{} catch {}，修改 catch 绑定
+* 在 ES10 之前，我们必须通过语法为 catch 子句绑定异常变量，无论是否有必要。很多时候 catch 块是多余的。 ES10 提案使我们能够简单的把变量省略掉。
+* 之前是
+    ```javascript
+        try {} catch(e) {}
+    ```
+* 现在是
+    ```javascript
+        try {} catch {}
+    ```
+
+## 10. 新的基本数据类型 BigInt
+* BigInt数据类型的目的是比Number数据类型支持的范围更大的整数值。在对大整数执行数学运算时，以任意精度表示整数的能力尤为重要。使用BigInt，整数溢出将不再是问题
