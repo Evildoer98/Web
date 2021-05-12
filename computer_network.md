@@ -302,7 +302,6 @@
     * 通用报文字段
     * 其他报文字段
 
-
 # WebSocket 的实现和应用
 1. 什么是 WebSocket
     * WebSocket 是HTML5 中的协议，支持持久连接，http 协议不支持持久性连接。
