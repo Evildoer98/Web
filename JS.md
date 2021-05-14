@@ -146,7 +146,6 @@
 * 全局共享的 Symbol
     * 要创建跨文件可用的 Symbol，甚至跨域（每个都有它自己的全局作用域），使用 Symbol.for() 方法和 Symbol.keyFor() 方法从全局的 Symbol 注册表设置和取得 Symbol
 
-
 ## 04. 0.1 + 0.2 !== 0.3
 *   因为 JS 采用 IEEE 754 双精度版本（64位）
 *   存在的问题的原因是：
@@ -174,7 +173,7 @@
 ## 01. typeof
 1. 原始类型除了 null，其他类型都可以通过 typeof 来判断
 2. typeof null 的值是 object。因为 对象的类型标签是 0。由于 null 代表的是空指针（值为0x00），因此 null 的类型标签是 0
-    * 类型标签存储在单元的低位中
+    * 类型标签存储在单元的低位中（不同对象在底层都表示为二进制）
        1.  000 object   数据是对象的引用
        2.  1   int      数据是31位有符号整数
        3.  010 double   数据是对双浮点数的引用
@@ -186,7 +185,7 @@
     // 数值
     typeof 37 === 'number';
     typeof 3.14 === 'number';
-    typeof(42) === 'number';
+    typeof (42) === 'number';
     typeof Math.LN2 === 'number';
     typeof Infinity === 'number';
     typeof NaN === 'number'; // 尽管它是 "Not-A-Number" (非数值) 的缩写
@@ -228,7 +227,7 @@
     typeof new Date() === 'object';
     typeof /regex/ === 'object'; // 历史结果请参阅正则表达式部分
 
-    // 下面的例子令人迷惑，非常危险，没有用处。避免使用它们。
+    // 下面的例子令人迷惑，非常危险，没有用处。避免使用它们
     typeof new Boolean(true) === 'object';
     typeof new Number(1) === 'object';
     typeof new String('abc') === 'object';
@@ -240,10 +239,10 @@
 
 ```
 
-## 02. instanceof
+## 02. instanceof（只能用于对象，不适用于原始类型的值）
 1. instanceof 内部通过原型链的方式来判断是否为构建函数的实例，常用于判断具体的对象类型
     [] instanceof Array
-2. 实现 instanceof
+2. 实现 instanceof（原型继承机制）
 ```javascript
     function isIntanceof(instance, klass){
         let proto = instance.__proto
@@ -257,19 +256,19 @@
 ```
 ## 03. Object.prototype.toString
 ```javascript
-eg: Object.prototype.toString.call(null)         // [Object Null]
-eg: Object.prototype.toString.call(1)            // [Object Number]
-eg: Object.prototype.toString.call(1n)           // [Object BigInt]
-eg: Object.prototype.toString.call(function(){}) // [Object Function]
-eg: Object.prototype.toString.call([])           // [Object Array]
-eg: Object.prototype.toString.call({})           // [Object Object]
-eg: Object.prototype.toString.call('')           // [Object String]
+    Object.prototype.toString.call(null)         // [Object Null]
+    Object.prototype.toString.call(1)            // [Object Number]
+    Object.prototype.toString.call(1n)           // [Object BigInt]
+    Object.prototype.toString.call(function(){}) // [Object Function]
+    Object.prototype.toString.call([])           // [Object Array]
+    Object.prototype.toString.call({})           // [Object Object]
+    Object.prototype.toString.call('')           // [Object String]
 ```
 
 ## 04. isxxx API
 ```javascript
-eg：Array.isArray([])   // true
-eg：isNaN(',')          // true
+    Array.isArray([])   // true
+    isNaN(',')          // true
 ```
 
 ## 常见考点
