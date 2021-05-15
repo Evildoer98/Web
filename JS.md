@@ -450,7 +450,7 @@ instanceof 原理
     ```javascript
         let p1
         var p2 
-        const p3 = '马上赋值
+        const p3 = '马上赋值'
         const p4  // 报错，没有赋值
     ```
 2. const 一旦声明值就不能改变
