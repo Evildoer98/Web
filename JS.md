@@ -170,7 +170,7 @@
     NaN 如何判断
 
 # 类型判断
-## 01. typeof
+## 01. typeof（判断数据类型）
 1. 原始类型除了 null，其他类型都可以通过 typeof 来判断
 2. typeof null 的值是 object。因为 对象的类型标签是 0。由于 null 代表的是空指针（值为0x00），因此 null 的类型标签是 0
     * 类型标签存储在单元的低位中（不同对象在底层都表示为二进制）
@@ -254,7 +254,7 @@
         }
     }
 ```
-## 03. Object.prototype.toString
+## 03. Object.prototype.toString（能够获取变量的准确类型）
 ```javascript
     Object.prototype.toString.call(null)         // [Object Null]
     Object.prototype.toString.call(1)            // [Object Number]
@@ -269,6 +269,9 @@
 ```javascript
     Array.isArray([])   // true
     isNaN(',')          // true
+    isArguments() // 判断是否是 arguments 对象
+    isObject()   // 判断是否是 对象
+    isElement()  // 判断是否是 DOM 元素
 ```
 
 ## 常见考点
@@ -316,12 +319,170 @@ instanceof 原理
     3. 暂时性死区
     4. 不可重复声明
     5. let、const 声明的全局变量不会挂在顶层对象下面
+* const 的注意点
+    1. const 声明之后必须马上赋值，否则会报错
+    2. const 简单类型一旦声明就不能再更改；复杂类型（数组、对象等）指针指向的地址不能更改，内部数据可以更改
 * let 和 const 都是 ES6 的语法，之前的 var 是没有块级作用域的，所以很容易造成全局变量污染，而 let 和 const 都是有块级作用域的
     1. let 可以理解为带块级作用域的 var
     2. const 则是指定常量，一旦定义就不能更改
 * let 和 const 声明的变量必须之前没有被使用过，否则会报错
 * let 和 const 声明的变量，只能在声明之后使用
 * 注意：const 当定义为一个引用类型时，可以往里面添加内容，但是不能替换
+
+## 为什么需要块级作用域
+* ES5 只有全局作用域和函数作用域，没有块级作用域
+    * eg：不合理的场景
+        1. 内层变量可能覆盖外层变量
+        2. 用来计数的循环变量泄露为全局变量
+
+## 01. 块级作用域
+1. 作用域
+    ```javascript
+        function f () {
+            let n = 5
+            if (true) {
+                let n = 10
+                console.log(n) // 10
+            }
+            consoloe.log(n)  // 5
+        }
+    ```
+2. 块级作用域任意嵌套
+    ```javascript
+        {{{{
+            {let test = 'Hello world'}
+            console.log(test)
+        }}}}
+    ```
+3. 块级作用域真正使代码分割成块
+    ```javascript
+        {
+            let a = ...
+            ...
+        }
+        {
+            let a = ...
+            ...
+        }
+        {
+            let a = ...
+            ...
+        }
+    ```
+
+## 02. 块级作用域声明函数
+1. 在块级作用域声明函数，最好使用匿名函数的形式
+    ```javascript
+        if(true) {
+            let a = function () {}
+        }
+    ```
+2. ES6 的块级作用域允许声明函数的规则，旨在使用大括号的情况下成立，如果没有使用大括号，就会报错
+    ```javascript
+        // 报错
+        'use strict'
+        if (true) 
+            function f () {} // 需要给 if 添加一个 {}
+    ```
+
+## 03. 不存在变量提升
+* 变量提升的现象：在同一作用域下，变量可以在声明之前使用，值为 undefined
+* ES5 时使用 var 声明变量，会出现变量提升的现象
+    ```javascript
+        // var 情况
+        console.log(foo) // 输出 undefined
+        var foo = 2
+
+        // let 情况
+        console.log(bar) // 报错 ReferenceError
+        let bar = 2
+    ```
+
+## 04. 暂时性死区
+* 只要一进入当前作用域，所要使用的变量就已经存在了，但是不可获取。只有等到声明变量的那一行代码出现，才可以获取和使用该变量
+    ```javascript
+        var temp = 123
+        if (true) {
+            temp = 'abc' // 报错，因为本区域有 temp 声明变量
+            let temp // 绑定 if 这个块级作用域，不能出现 temp 变量
+        }
+    ```
+* 暂时性死区和不能变量提升的意义在与：
+    * 为了减少运行时的错误，防止在变量声明前就使用这个变量，从而导致意料之外的行为
+
+## 05. 不允许重复声明变量
+* 在测试时可能出现这种情况
+    ```javascript
+        var a = '声明'
+        const a = '不报错'
+    ```
+    * 这种情况是因为 babel 在转化的时候，做了一些处理，而在浏览器的控制台中测试，就会报错
+* let、const 不允许在相同作用域内，重复声明同一个变量
+    ```javascript
+        function f1 (arg) {
+            let arg // 报错
+        }
+
+        function f2 (arg) {
+            {
+                let arg // 不报错
+            }
+        }
+    ```
+
+## 06. let、const 声明的全局变量不会挂在顶层对象下面
+1. 浏览器环境的顶层对象：window
+2. node 环境的顶层对象：global
+3. var 声明的全局变量会挂载顶层对象下面，而 let、const 不会挂在顶层对象下面
+* eg：
+    ```javascript
+        var a = 1
+        // 如果在 node 环境，可以写成 global.a
+        // 或者采用通用方法，写成 this.a
+        window.a = 1
+
+        let a = 1
+        window.b // undefined
+    ```
+
+## 07. const 命令
+1. 一旦声明，必须马上赋值
+    ```javascript
+        let p1
+        var p2 
+        const p3 = '马上赋值
+        const p4  // 报错，没有赋值
+    ```
+2. const 一旦声明值就不能改变
+    * 简单类型：不能改动
+        ```javascript
+            const p = '不能改变'
+            p = '报错'  // 改值会报错
+        ```
+        ![const1](./src/image/JS_images/const1.jpg)
+    * 复杂类型：变量指针不能变
+        ```javascript
+            const p1 = ['bu']
+            p1[0] // bu
+            p1 = ['a'] // 报错
+        ```
+        ![const2](./src/image/JS_images/const2.jpg)
+        ```javascript
+            const p2 = {name: 'Bob'}
+            p2.name // Bob
+            p2 = { name: 'hello'} // 报错
+        ```
+        ![const3](./src/image/JS_images/const3.jpg)
+* const 所说的一旦声明值就不能改变，实际上指的是：变量指向的那个内存地址所保存的数据不得改动
+    * 简单类型：内存地址就是值，即常量（一变就报错）
+    * 复杂类型（对象、数组等）：地址保存的是一个指针，const 只能保证指针是固定（总是指向同一个地址），它内部的值是可以改变的
+        * 注意：只要不重新赋值整个数组/对象，因为保存的是一个指针，所以对数组使用的 push、shift、splice 等方法也是允许的，也就是把值一个个的全部删除都不会报错
+
+## 08. let、const 的使用场景
+* let 使用场景：变量，用以替代 var
+* const 使用场景：常量、声明匿名函数、箭头函数
+
+
 
 # this
 ## 01. 普通函数(在对象的方法中使用，this指向当前的对象)
