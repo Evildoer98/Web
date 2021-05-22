@@ -485,67 +485,145 @@ instanceof 原理
 
 
 # this
-## 01. 普通函数(在对象的方法中使用，this指向当前的对象)
-```javascript
-function foo() {
-    console.log(this.a)
-}
-var a = 1
-foo() // 1
+## 01. 箭头函数
+* 箭头函数的 this 是在创建它时外层 this 的指向
+    1. 创建箭头函数时，就已经确定了它的指向
+    2. 箭头函数内的 this 指向外层的 this
+    * 箭头函数不能用作构造函数
 
-var obj = {
-    a: 2,
-    foo: foo
-}
-obj.foo() // 2
+## 02. new
+* 当使用 new 关键字调用函数时，函数中的 this 一定是 JS 创建的新对象
 
-// 以上情况就是看函数是被谁调用，那么 `this` 就是谁，没有被对象调用，`this` 就是 `window`
-
-// 以下情况是优先级最高的，`this` 只会绑定在 `c` 上，不会被任何方式修改 `this` 指向
-
-var c = new foo()
-c.a = 3
-console.log(c.a) // 3
-
-// 还有种就是利用 call，apply，bind 改变 this，这个优先级仅次于 new
-```
-
-## 02. 独立函数使用
-* 严格模式下，this 指向 undefined
-* 非严格模式下，this指向全局对象，比如window
-```javascript
-    var a = 'jjj'
-    var obj = {
-        a : 'hhh',
-        test() {
-            return this.a
+## 03. bind
+* bind 是指 Function.prototype.bind()
+* 多次 bind 只认第一次 bind 的值
+    ```javascript
+        function func () {
+            console.log(this)
         }
-    }
-    const test = obj.test
-    console.log(test())  // 'jjj'
-```
-## 03. 通过call/apply/bind来指定
-*  三者都可传入一个要改变的 this 的值，来改变 this 指向，区别就是 call/apply 改变的同时执行函数，bind 不执行函数，而是返回这个函数
-*  call/apply 第一个参数就是要改变的this的值，区别就是 call 传入的参数列表，apply 传入的参数数组
 
-## 04.构造函数
-    如果一个函数是构造函数，那么 this 就指向它实例化出来的对象
+        func.bind(1).bind(2)    // 1
+    ```
+* 箭头函数中 this 不会被修改
+    ```javascript
+        func = () => {
+            // 这里的 this 指向取决于外层 this
+            console.log(this)
+        }
+        func.bind(1)()  // Window
+    ```
+* bind 与 new
+    ```javascript
+        function func () {
+            console.log(this, this.__proto__ === func.prototype)
+        }
 
-## 05.箭头函数
-1. 因为箭头函数没有 this，所以一切改变箭头函数 this 指向都是无效的
-2. 箭头函数的 this 只取决于定义时的环境
-3. 比如 fn 箭头函数在 window 环境下定义的，无论如何调用，this 都指向 window
+        boundFunc = func.bind(1)
+        new boundFunc()     // true
+    ```
+
+## 04. apply 和 call
+* apply() 和 call() 的第一个参数都是 this，区别在于通过 apply 调用时参数是放在数组中的，而通过 call 调用时实参是逗号分隔的
+* 箭头函数中的 this 不会被修改
+    ```javascript
+        func = () => {
+            // 这里 this 指向取决于外层 this
+            console.log(this)
+        }
+
+        func.apply(1) // window
+    ```
+* bind 函数中 this 不会被修改
+    ```javascript
+        function func () {
+            console.log(this)
+        }
+
+        boundFunc = func.bind(1)
+        boundFunc.apply(2)      // 1
+    ```
+
+## 05. Obj.
 ```javascript
-    var a = 1
-    const fn = () => {
-        console.log(this.a)  // 1
+    function func () {
+        console.log(this.x)
     }
-    const obj = {
-        fn,
-        a: 2
-    }
-    obj.fn()  // undefined
+
+    obj = { x: 1}
+    obj.func = func
+    obj.func()  // 1
 ```
+
+## 06. 直接调用
+* 函数在被直接调用时，this 将指向全局对象。在浏览器环境中全局对象是 Window，在 Node.js 环境中是 Global
+* eg1：
+    ```javascript
+        function func () {
+            console.log(this)
+        }
+
+        func() // Window
+    ```
+* eg2：
+    ```javascript
+        function outerFunc () {
+            console.log(this)
+
+            function func () {
+                console.log(this)
+            }
+            func()
+        }
+
+        outerFunc.bind({ x: 1})
+    ```
+
+## 07. 不在函数里
+* 不在函数中的场景，可分为浏览器的 < script /> 标签里，或 Node.js 的模块文件里
+    1. 在 < script /> 标签里，this 指向 Window
+    2. 在 Node.js 的模块文件里，this 指向 Module 的默认导出对象，也就是 module.exports
+
+## 非严格模式
+* 严格模式是在 ES5 提出的。在 ES5 规范之前，也就是非严格模式下，this 不能是 undefined 或 null。
+    1. 如果得出 this 的指向是 undefined 或 null，那么 this 会指向全局对象
+    2. 在浏览器环境中全局对象是 Window，在 Node.js 环境中 Global
+* eg1：在非严格模式下，this 都指向全局对象
+    ```javascript
+        function a() {
+            console.log("function a: ", this);
+
+            (() => {
+                console.log("arrow function: ", this)
+            })()
+        }
+
+        a()
+        a.bind(null)()
+        a.bind(undefined)()
+        a.bind().bind(2)
+        a.apply()
+    ```
+    ![非严格模式下的this](./src/image/JS_images/非严格模式下的this.jpg)
+
+* eg2：在严格模式下，this
+    ```javascript
+        "use strict"
+
+        function a() {
+            console.log("function a: ", this);
+
+            (() => {
+                console.log("arrow function: ", this)
+            })()
+        }
+
+        a()
+        a.bind(null)()
+        a.bind(undefined)()
+        a.bind().bind(2)
+        a.apply()
+    ```
+    ![严格模式下的this](./src/image/JS_images/严格模式下的this.jpg)
 
 ## 常见考点
 ```javascript
