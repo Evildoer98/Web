@@ -785,6 +785,8 @@ instanceof 原理
 # 函数柯里化
 * 是把接受多个参数的函数变换成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下参数且返回结果的新函数的技术
 * 柯里化其实本身是固定一个可以预期的参数，并返回一个特定的函数，处理一批特定的需求，增加了函数的适用性，但同时降低了函数的适用范围
+* 对于已经柯里化的函数来说，当接收到的参数数量与原函数的形参数量相同时，执行原函数；当接收的参数数量小于原函数的形参数量时，返回一个函数用于接收剩余的参数，直至接收的参数数量与形参数量一致，执行原函数
+
 * 思想：降低适用范围，提高适用性
 * 用处：
     1. 提高适用性：
@@ -815,6 +817,24 @@ instanceof 原理
         2. 一些老版本的浏览器在 arguments.length 的实现上是相当慢的
         3. 使用 fn.apply(...) 和 fn.call(...) 通常比直接调用 fn(...) 稍微慢点
         4. 创建大量嵌套作用域和闭包函数会带来花销，无论是在内存还是在速度上
+
+* 通过柯里化缓存的参数数量，来判断是否到达了执行时机
+```javascript
+    function curry(fn) {
+        const argLen = args.length
+        const presetArgs = [].slice.call(arguments,1)
+        return function () {
+            const restArg = [].slice.call(arguments)
+            const allArgs = [...presetArgs, ...restArgs]
+            if (allArgs.length >= argLen) {
+                return fn.apply(this, allArgs)
+            } else {
+                return curry.call(null, fn, ...allArgs)
+            }
+        }
+    }
+```
+
 * 经典面试题
     ```javascript
     // 实现一个 add 方法，使计算结果能够满足如下预期
