@@ -174,6 +174,27 @@ transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);
     1. float:left
     2. float:right
 
+## 02. BFC 定义
+* BFC（Block formatting context）直译“块级格式化上下文”。它是独立的渲染区域，只有 Block-level box 参与，它规定了内部的 Block-level Box 如何布局，并且与这个区域外部毫不相干
+* Box：css 布局的基本单位。直观点来说，就是一个页面由很多个 Box 组成。元素的类型和 display 属性，决定了这个 Box 的类型，不同类型的 Box，会参与不同的 Formatting Context
+* 作用：使 BFC 内部浮动元素不会到处乱跑和浮动元素产生边界，可以用来清除浮动和解决 margin 重叠等问题
+* 一般根元素、浮动元素、绝对定位元素、行内块元素、表格类元素、还有 overflow 不为 visible 的元素都会创建 BFC
+### 特征
+1. BFC 的块不会和浮动块重叠
+2. 计算 BFC 元素的高度时，会包括浮动元素
+3. 在一个 BFC 下的块 margin 会发生重叠，不再同一个则不会
+4. BFC 元素是一个独立的容器，使得里面的元素和外部元素隔离开，互不影响
+### 触发 BFC
+1. float 的值不为 none
+2. overflow 的值为 auto、hidden、scroll，不是 visibel
+3. display 的值为 table-cell、table-caption、inline-block、flex或inline-flex
+4. position 设置为 absolute 和fixed
+* 除此之外，html元素本身默认就是一个BFC元素
+### 应用场景
+1. 清除浮动
+2. 自适应布局
+3. 防止 margin 合并
+
 ## 02. div+css的布局较table布局有什么优点？
 1. 改版的时候更⽅便 只要改 css ⽂件。
 2. ⻚⾯加载速度更快、结构化清晰、⻚⾯显示简洁。
@@ -317,6 +338,339 @@ transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);
         vertical-align: middle; /* 垂直居中 */
     }  
     ```
+
+## 09. 单列布局
+* 常见的单列布局有两种：
+    * header，content 和 footer 等宽的单列布局
+    * header 与 footer 等宽，content 略窄的单列布局
+
+## 10. 两列自适应布局
+* 两列自适应布局是指一列由内容撑开，另一列撑满剩余宽度的布局方式
+### 1. float + overflow:hidden
+* 如果是普通的两列布局，浮动 + 普通元素的 margin 便可以实现，但如果是自适应的两列布局，利用 float + overflow:hidden 便可以实现，这种办法主要通过 overflow 触发 BFC，而 BFC 不会重叠浮动元素。由于设置 overflow:hidden 并不会触发 IE6-浏览器的 haslayout 属性，所以需要设置 zoom:1 来兼容 IE6-浏览器
+* 
+    ```html
+        <div class="parent" style="background-color: lightgrey;">
+            <div class="left" style="background-color: lightblue;">
+                <p>left</p>
+            </div>
+            <div class="right"  style="background-color: lightgreen;">
+                <p>right</p>
+                <p>right</p>
+            </div>        
+        </div>
+    ```
+* 
+    ```css
+        .parent {
+            overflow: hidden;
+            zoom: 1;
+        }
+        .left {
+            float: left;
+            margin-right: 20px;
+        }
+        .right {
+            overflow: hidden;
+            zoom: 1;
+        }
+    ```
+* 注意点:如果侧边栏在右边时，注意渲染顺序。即在HTML中，先写侧边栏后写主内容
+### 2. Flex 布局
+* Flex 布局，也叫弹性盒子布局
+*    
+    ```css
+        .parent {
+            display: flex;
+        }
+        .right {
+            margin-left: 20px;
+            flex: 1
+        }
+    ```
+* flex 是 flex-grow、flex-shrink、flex-basis的缩写
+    1. flex-grow
+        CSS flex-grow 属性定义弹性盒子项（flex item）的拉伸因子
+        ```css
+            flex-grow: 1;
+            flex-grow: inherit;
+        ```
+    2. flex-shrink
+        CSS flex-shrink 属性指定了 flex 元素的收缩规则。flex 元素仅在默认宽度之和大于容器的时候才会发生收缩，其收缩的大小是依据 flex-shrink 的值
+    3. flex-basis
+        CSS 属性 flex-basis 指定了 flex 元素在主轴方向上的初始大小。如果不使用 box-sizing 改变盒模型的话，那么这个属性就决定了 flex 元素的内容盒（content-box）的尺寸。
+        <‘width’>
+        width 值可以是 ; 该值也可以是一个相对于其父弹性盒容器主轴尺寸的百分数 。负值是不被允许的。默认为 auto
+        content
+        基于 flex 的元素的内容自动调整大小
+
+### 3. grid 布局
+* Grid 布局，是一个基于网格的二维布局系统，目的是用来优化用户界面设计
+    ```css
+        .parent {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 20px
+        }
+    ```
+
+## 11. 三栏布局
+* 特征：中间列自适应宽度，旁边两侧固定宽度
+### 1. 圣杯布局
+* 特点：特殊的三栏布局，同样是两边固定宽度，中间自适应，唯一区别是 dom 结构必须是先写中间列部分，这样实现中间列可以优先加载
+    ```html
+        <article class="container">
+            <div class="center">
+                <h2>圣杯布局</h2>
+            </div>
+            <div class="left"></div>
+            <div class="right"></div>
+        </article>
+    ```
+    ```css
+        .container {
+            /* 为左右两栏腾出空间 */
+            padding-left: 220px;
+            padding-right: 220px;
+        }
+        .left {
+            float: left;
+            width: 200px;
+            height: 400px;
+            background: red;
+            margin-left: -100%;
+            position: relative;
+            left: -220px;
+        }
+        .center {
+            float: left;
+            width: 100%;
+            height: 500px;
+            background: green;
+        }
+        .right {
+            float: left;
+            width: 200px;
+            height: 400px;
+            background: blue;
+            margin-left: -200px;
+            position: relative;
+            right: -220px;
+        }
+    ```
+### 2. 双飞翼布局
+* 特点：同样是三栏布局，在圣杯布局基础上进一步优化，解决了圣杯布局错乱问题，实现了内部与布局的分离。而且任何一栏都可以是最高栏，不会出问题
+    ```html
+        <article class="container">
+            <div class="center">
+                <div class="inner">双飞翼布局</div>
+            </div>
+            <div class="left"></div>
+            <div class="right"></div>
+        </article>
+    ```
+    ```css
+        .container {
+            /* 确保中间内容可以显示出来，两倍 left宽 + right宽 */
+            min-width: 600px;
+        }
+        .left {
+            float: left;
+            width: 200px;
+            height: 400px;
+            background: red;
+            margin-left: -100%;
+        }
+        .center {
+            float: left;
+            width: 100%;
+            height: 500px;
+            background: green;
+        }
+        .center .inner {
+            margin: 0 200px;
+        }
+        .right {
+            float: left;
+            width: 200px;
+            height: 400px;
+            background: blue;
+            margin-left:-200px;
+        }
+    ```
+
+## 12. 等高布局
+* 等高布局是指子元素在父元素中高度相等的布局方式
+### 1. 利用正 padding + 负 margin
+* 利用等布局可解决圣杯布局的第二缺点，因为背景是在 padding 区域显示的，设置一个大数值的 padding-bottom，再设置相同数值的负的 margin-bottom，并在所有列外面加上一个容器，并设置 overflow: hidden 把溢出背景切掉。
+* 这种可能实现多列等高布局，并且也能实现列与列之间分割线效果，结构简单，兼容所有浏览器。
+* 新增代码：
+    ```css
+        .center,
+        .left,
+        .right {
+            padding-bottom: 10000px;
+            margin-bottom: 10000px;
+        }
+        .container {
+            padding-left: 220px;
+            padding-right: 220px;
+            /* 把溢出背景切掉 */
+            overflow: hidden;
+        }
+    ```
+
+### 2. 利用背景图片
+* 这种方法是实现等高列最早使用的一种方法，就是使用背景图片。在列的父元素上使用这个背景图片进行 Y 轴的铺放，从而实现一种等高列的假象。实现方法简单，兼容性强，不需要太多的 css 样式就可以轻容实现，但此方法不适合流体布局等高列的布局
+    ```html
+        <div class=”container clearfix”>
+            <div class=”left”></div>
+            <div  class=”content”></div>
+            <div class=”right”></div>
+        </div>
+    ```
+    ```css
+        .container {
+            background: url("test.png") repeat-y;
+            width: 960px;
+            margin: 0 auto
+        }
+        .left {
+            float: left;
+            width: 220px;
+        }
+        .content {
+            float: left;
+            width: 480px;
+        }
+        .right {
+            float: left;
+            width: 220px;
+        }
+    ```
+### 3. 模仿表格布局
+* 简单、易于实现。兼容性差，在 ie6-7 无法正常运行
+    ```html
+        <div class="container table">
+        <div class="containerInner tableRow">
+            <div class="column tableCell cell1">
+            <div class="left aside">
+                ....
+            </div>
+            </div>
+            <div class="column tableCell cell2">
+            <div class="content section">
+                ...
+            </div>
+            </div>
+            <div class="column tableCell cell3">
+            <div class="right aside">
+                ...
+            </div>
+            </div>
+        </div>
+        </div>
+    ```
+    ```css
+        .table {
+            width: auto;
+            min-width: 1000px;
+            margin: 0 auto;
+            padding: 0;
+            display: table;
+        }
+        .tableRow {
+            display: table-row;
+        }
+        .tableCell {
+            display: table-cell;
+            width: 33%;
+        }
+        .cell1 {
+            background: #f00;
+            height: 800px;
+        }
+        .cell2 {
+            background: #0f0;
+        }
+        .cell3 {
+            background: #00f;
+        }
+    ```
+### 4. 使用边框和定位
+* 使用边框和绝对定位来实现一个假的高度相等列的效果。结构简单，兼容各浏览器。
+* 实现一个两列等高布局，侧栏高度要与主内容高度相等
+    ```html
+        <div id="wrapper">
+            <div id="mainContent">...</div>
+            <div id="sidebar">...</div>
+        </div>
+    ```
+    ```css
+        #wrapper {
+            width: 960px;
+            margin: 0 auto;
+        }
+        #mainContent {
+            border-right: 220px solid #dfdfdf;
+            position: absolute;
+            width: 740px;
+            height: 800px;  
+            background: green;
+        }
+        #sidebar {
+            background: #dfdfdf;
+            margin-left: 740px;
+            position: absolute;
+            height: 800px;
+            width: 220px;
+        }
+    ```
+
+## 13. 粘连布局
+* 特点：
+    1. 有一块内容 < main >，当 < main > 的高度足够长的时候，紧跟在 < main > 后面的元素 < footer > 会跟在 < mian > 元素的后面
+    2. 当 < mian > 元素比较短的时候（比如小于屏幕的高度），期望这个 < footer > 元素能够“粘连”在屏幕的底部
+    ```html
+        <div id="wrap">
+            <div class="main">
+                main <br />
+                main <br />
+                main <br />
+            </div>
+        </div>
+        <div id="footer">footer</div>
+    ```
+    ```css
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html,
+        body {
+            height: 100%;//高度一层层继承下来
+        }
+        #wrap {
+            min-height: 100%;
+            background: pink;
+            text-align: center;
+            overflow: hidden;
+        }
+        #wrap .main {
+            padding-bottom: 50px;
+        }
+        #footer {
+            height: 50px;
+            line-height: 50px;
+            background: deeppink;
+            text-align: center;
+            margin-top: -50px;
+        }
+    ```
+    1. footer 必须是独立的结构，与 wrap 没有任何嵌套关系
+    2. wrap 区域的高度通过设置 min-height，变为视口高度
+    3. footer 要使用 margin 为负来确定自己的位置
+    4. 在 mian 区域需要设置 padding-bottom。这也是为了防止负 margin 导致 footer 覆盖任何实际内容
 
 # 性能优化
 ## 01. 雪碧图
