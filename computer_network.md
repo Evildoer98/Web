@@ -27,6 +27,7 @@
     5. 浏览器解密响应信息，并对消息进行验真，之后进行加密交互数据
 * 加密解密过程：
 ![加密解密过程](./src/image/Computer_network_images/加密解密过程.png)
+
 ## 02. http1、http2、http3
 ### http1
 * 优点：
@@ -304,8 +305,11 @@
 
 # WebSocket 的实现和应用
 1. 什么是 WebSocket
+    * WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议。WebSocket 使得客户端和服务器端之间的数据交换变得更加简单，允许服务端主动向客户端推送数据。在 WebSocket API 中，浏览器和服务器只需要完成一次 HTTP 握手，两者之间就可以创建持久性的连接，并进行双向数据传输
     * WebSocket 是HTML5 中的协议，支持持久连接，http 协议不支持持久性连接。
     * http1.0 和 http1.1 都不支持持久性的连接，http1.1 中的 keep-alive，将多个 http 请求合并为 1 个
+2. 为什么有了 HTTP 还需要 WebSocket？
+    * 一般情况下使用 HTTP 的缺陷，就是 HTTP 只能由客户端主动发起，如果有需要服务端通知的业务，就需要轮询。轮询的效率低，非常浪费资源。为了解决 Web 端即时通信的需求就出现了 WebSocket
 2. WebSocket 是什么样的协议，有什么优点？
     * http 的声明周期通过 Request 来界定，也就是一个 Request 一个 Response，那么在 http1.0 协议中，这次 http 请求就结束了
     * 在 http1.1 中有一个 connection: keep-alive。即在一个 http 连接中，可以发送多个 Response，接受多个 Response
@@ -314,6 +318,162 @@
         * WebSocket 握手协议的实现，基本是 2 个属性
             1. Upgrade: webSocket
             2. Connection: Upgrade
+3. 为什么不使用 HTTP 长连接来实现即时通信？事实上，在 WebSocket 之前就是使用 HTTP 长连接这种方式，如 Connet，但是有弊端：
+    1. HTTP1.1 规范中规定，客户端不应该与服务器端建立超过两个的 HTTP 连接，新的连接会被阻塞
+    2. 对于服务器端来说，每个长连接都占有一个用户线程，在 NIO 或者 异步编程之前，服务端的开销太大
+4. 为什么不直接使用 Socket 编程，基于 TCP 直接保持长连接，实现即时通信？
+    * Socket 编程针对 C/S 模式的，而浏览器是 B/S 模式，浏览器没法发起 Socket 请求，正因如此，W3C 最后还是给出了浏览器的 Socket————WebSocket
+5. Socket 是什么？
+    1. Unix 中的 Socket
+        * 操作系统中也有使用到的 Socket 这个概念用来进行进程间通信，它和通常说的基于 TCP/IP 的 Socket 概念十分相似，代表了在操作系统中传输数据的两方，只是它不再基于网络协议，而是操作系统本身的文件系统
+    2. 网络中的 Socket
+        * 网络中的 Socket 并不是什么协议，而是为了使用 TCP，UDP 而抽象出来的一层 API，它是位于应用层和传输层之间的一个抽象层。Socket 是对 TCP/IP 的封装；HTTP 是轿车，提供了封装或者显示数据的具体形式；Socket 是发动机，提供了网络通信的能力。在 Unix 一切皆文件的思想下，Socket 是一种“打开————读/写————关闭”模式的实现，服务器和客户端各自维护一个“文件”，在建立连接打开后，可以向自己写入文件内容供对方读取或者读取对方内容，通信结束时关闭文件。
+        * 若想基于 TCP/IP 来构建服务，那么可能会使用到 Socket API
+5. WebSocket 与 Socket 的区别
+    1. Socket 是传输控制层的接口，用户可以通过 Socket 来操作底层 TCP/IP 协议族通信
+    2. WebSocket 是一个完整应用层协议
+    3. Socket 更灵活，WebSocket 更易用
+    4. 两者都能做即时通信
+
+# 短轮询、长轮询、WebSocket、SSE
+|          | 轮询（Polling）                | 长轮询（Long-Polling） | WebSocket                             | SSE |
+| 通讯协议 | http                           | http                  | tcp                                   | http | 
+| 触发方式 | client（客户端）                | client（客户端）       | client、server（客户端、服务端）        |client、server（客户端、服务端） | 
+| 优点    | 兼容性好容错性强，实现简单        | 比短轮询节约资源        | 全双工通讯协议，性能开销小、安全性高，可扩展性强 | 实现简便，开发成本低 | 
+| 缺点    | 安全性差，占较多的内存资源与请求数 | 安全性差，占较多的内存资源与请求数 | 传输数据需要进行二次解析，增加开发成本及难度 | 只适用高级浏览器 | 
+| 延迟    | 非实时，延迟取决于请求间隔        | 同短轮询               | 实时          | 非实时，默认3秒延迟，延迟可自定义 | 
+ 
+1. 轮询（Polling）
+    * 短轮询（Polling）的实现思路就是浏览器端每个几秒钟向服务器发送 http 请求，服务端在收到请求后，不论是否有数据更新，都直接进行响应。在服务端响应完成，就会关闭这个 TCP 连接
+    ```javascript
+        function Polling() {
+            fetch(url).then(data => {
+                // something
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+        setInterval(polling, 5000)
+    ```
+    * 优点：简单，兼容性好，只要支持 http 协议就能实现
+    * 缺点：非常的消耗资源，因为建立 TCP 连接是非常消耗资源的，服务端响应完成就会关闭这个 TCP 连接，下一次请求再次建立 TCP 连接
+
+2. 长轮询（Long-Polling）
+    * 客户端发送请求后服务器端不会立即返回数据，服务器端会阻塞请求连接不会立即断开，知道服务器端有数据更新或者是连接超时才返回，客户端才再次发出请求新建连接、如此反复从而获取最新数据
+    ```javascript
+        function LongPolling () {
+            fetch(url).then(data => {
+                LongPolling()
+            }).catch(err => {
+                LongPolling()
+                console.log(err)
+            })
+        }
+        LongPolling()
+    ```
+    * 优点：长轮询和短轮询比起来，明显减少了很多不必要的 http 请求次数，相比之下解决了资源
+    * 缺点：连接挂起也会导致资源的浪费
+
+3. WebSocket
+    ```javascript
+        // 服务端
+        const express = require('express')
+        const app = express()
+        const server = require('http').Server(app)
+        const WebSocket = require('ws')
+        const wss = new WebSocket.Server({port: 8000})
+        wss.on('connnction', function connection(ws) {
+            console.log('server receive connection')
+            ws.on('message', function incoming(message) {
+                console.log('server: recevied: %s', message)
+            })
+            ws.send('world')
+        })
+        app.get('/', function (req, res) {
+            res.sendfile(__dirname + '/index.html');
+        });
+        app.listen(3000);
+
+        // 客户端
+        const ws = new WebSocket('ws://localhost:8080');
+        ws.onopen = function () {
+            console.log('ws onopen');
+            ws.send('from client:hello');
+        };
+        ws.onmessage = function (e) {
+            console.log('ws onmessage');
+            console.log('from server:' + e.data);
+        }
+    ```
+
+4. SSE（Server-Sent Events）
+    * Server-Sent是HTML5提出一个标准。由客户端发起与服务器之间创建TCP连接，然后并维持这个连接，直到客户端或服务器中的任何一方断开，ServerSent使用的是"问"+"答"的机制，连接创建后浏览器会周期性地发送消息至服务器询问，是否有自己的消息。其实现原理类似于我们在上一节中提到的基于iframe的长连接模式。HTTP响应内容有一种特殊的content-type —— text/event-stream，该响应头标识了响应内容为事件流，客户端不会关闭连接，而是等待服务端不断得发送响应结果。SSE规范比较简单，主要分为两个部分：浏览器中的EventSource对象，以及服务器端与浏览器端之间的通讯协议。
+    * 基础用法
+        * 在浏览器中通过 EventSource 构造函数来创建该对象
+            var source = new EventSource('/sse')
+        * 而SSE的响应内容可以看成是一个事件流，由不同的事件所组成。这些事件会触发前端EventSource对象上的方法。
+            ```javascript
+                  // 默认的事件
+                source.addEventListener('message', function (e) {
+                    console.log(e.data);
+                }, false);
+
+                // 用户自定义的事件名
+                source.addEventListener('my_msg', function (e) {
+                    process(e.data);
+                }, false);
+
+                // 监听连接打开
+                source.addEventListener('open', function (e) {
+                    console.log('open sse');
+                }, false);
+
+                // 监听错误
+                source.addEventListener('error', function (e) {
+                    console.log('error');
+                });
+            ```
+            * EventSource通过事件监听的方式来工作。注意上面的代码监听了y_msg事件，SSE支持自定义事件，默认事件通过监听message来获取数据。实现代码如下:
+        * 客户端
+            ```javascript
+                // 显示聊天信息
+                let chat = new EventSource("/chat-room");
+                chat.onmessage = function (event) {
+                    let msg = event.data;
+                    $(".list-group").append("<li class='list-group-item'>" + msg + "</li>");
+                    // chat.close(); 关闭server-sent event
+                };
+
+                // 自定义事件
+                chat.addEventListener("myChatEvent", function (event) {
+                    let msg = event.data;
+                    $(".list-group").append("<li class='list-group-item'>" + msg + "</li>");
+                });
+            ```
+        * 服务端
+            ```javascript
+                var express = require('express');
+                var router = express.Router();
+                router.get('/chat-room', function (req, res, next) {
+                    // 当res.white的数据data 以\n\n结束时 就默认该次消息发送完成，触发onmessage方法，以\r\n不会触发onmessage方法
+                    res.header({
+                        "Content-Type": "text/event-stream",
+                        "Cache-Control": "no-cache",
+                        "Connection": "keep-alive"
+                    });
+                    // res.white("event: myChatEvent\r\n"); 自定义事件
+                    res.write("retry: 10000\r\n"); // 指定通信的最大间隔时间
+                    res.write("data: start~~\n\n");
+                    res.end(); // 不加end不会认为本次数据传输结束 会导致不会有下一次请求
+                });
+            ```
+    * 优点： 客户端只需连接一次，Server就定时推送，除非其中一端断开连接。并且SSE会在连接意外断开时自动重连。
+    * 缺点： 要学习新的语法
+
+5. 总结：基本上可以分为两大类基于http和tcp两种通信中的一种。
+    * 兼容性考虑：短轮询>长轮询>长连接SSE>WebSocket
+    * 从性能方面考虑：WebSocket>长连接SSE>长轮询>短轮询
+    * 服务端推送：WebSocket>长连接SSE>长轮询
 
 # Cookie、Session、Token
 ## Cookie
