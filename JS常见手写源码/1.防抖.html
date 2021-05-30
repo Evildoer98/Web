@@ -10,6 +10,14 @@
     <button id="bt">dianwo</button>
     <script>
         // 函数调用后，在执行之前无论被调用多少次都会重新开始计时
+        // 函数防抖是某一段时间内只执行一次
+        // 理解：函数防抖就是法师发技能的时候要读条，技能读条没有完再按技能就会重新读条
+        /**
+         * 应用场景：
+         *  search 搜索联想，用户在不断输入值时，用防抖来节约请求资源
+         *  window 触发 resize 的时候，不断的调整浏览器窗口大小会不断的触发这个事件，用防抖来让其只触发一次
+         */
+
         const f1 = function (Func, ms){
             let timer
            return function (...args){
