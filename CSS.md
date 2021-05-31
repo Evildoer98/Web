@@ -16,8 +16,52 @@
 
 # CSS 选择符有那些？哪些属性可以继承？
 * id 选择器（#content）、类选择器（.content）、标签选择器（div、p、span 等）、相邻选择器（h1+p）、子选择器（ul>li）、后代选择器（li a），通配符选择器（*）
+* 可以继承的样式属性：font-size、font-family、color、ul、li、dl、dd、dt
+* 不可继承的样式属性：border、padding、margin、width、height
 
+# CSS 优先级算法如何计算？
+* 考虑到就近原则，同权重情况下样式定义以最近者为准
+* 载入的样式按照最后的定位为准
+* 优先级排序：
+    * 同权重情况下：内联样式表（标签内部）> 嵌入样式表（当前文件中） > 外部样式表（外部文件中）
+* 权重：
+    行内样式（+1000）；
+    id选择器（+100）；
+    属性、class、伪类选择器（+10）；
+    元素、伪元素、通配符（+0）
+* 优先级：
+    1. 权重相同，写在后面的覆盖前面的
+    2. 使用 !important 达到最大优先级，都使用 !important 时，权重大的优先级高
 
+# CSS3 新增伪类有那些？
+1. :root 选择文档的根元素，等同于 html 元素
+2. :empty 选择没有子元素的元素
+3. :target 选取当前活动的目标元素
+4. :not(selector) 选择除 selector 元素之外的元素
+5. :enabled 选择可用的表单元素
+6. :disabled 选择禁用的表单元素
+7. :checked 选择被选中的表单元素
+8. :nth-child 匹配父元素下指定子元素，在所有子元素中排序第 n 
+9. :nth-last-child(n) 匹配父元素下指定子元素，在所有子元素中排序第 n
+10. :nth-child(odd)
+11. :nth-child(even)
+12. :nth-child(3n+1)
+13. :first-child
+14. :last-child
+15. :only-child
+16. :nth-of-type(n) 匹配父元素下指定子元素，在同类子元素中排序第 n
+17. :nth-last-of-type(n) 匹配父元素下指定子元素，在同类子元素中排序第 n，从后向前数
+18. :nth-of-type(odd)
+19. :nth-of-type(even)
+20. :nth-of-type(3n+1)
+21. :first-of-type
+22. :last-of-type
+23. :only-of-type
+24. ::selection 选择被用户选取的元素部分（伪元素）
+25. :first-line 选择元素中的第一行（伪元素）
+26. :first-letter 选择元素中的第一个字符（伪元素）
+27. :after 在该元素之后添加内容（伪元素）
+28. :before 在该元素之前添加内容（伪元素）
 
 # CSS 属性
 ## 01. CSS 中定位的方式有那些？ position 属性的值有哪些以及之间的区别？
