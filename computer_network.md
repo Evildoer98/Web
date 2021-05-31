@@ -124,6 +124,7 @@
 * 发生拥塞的主要原因：在于网络能够提供的资源不足以满足用户的需求。这些资源包括缓存空间、链路带宽容量和中间节点的处理能力
 
 ## 05. 网络模型
+
 ### 1. OSI七层 网络模型
 | OSI |  功能 | 协议族|
 |----|----|----|
@@ -375,6 +376,9 @@
     * 缺点：连接挂起也会导致资源的浪费
 
 3. WebSocket
+    * WebSocket 是 HTML5 的一个持久化的协议，它实现了浏览器与服务器的全双工通信，同时也是跨域的一种解决方案。
+    * WebSocket 和 HTTP 都是应用层协议，都基于 TCP 协议，但是 WebSocket 是一种双向通信协议，在建立连接之后，WebSocket 和 server 与 client 都能主动向对方发送或接受数据。同时 WebSocket 在建立连接时需要借助 HTTP 协议，连接建立好了之后 client 与 server 之间的双向通信就与 HTTP 无关了
+    * 原生的 WebSocket API 使用起来不太方便，所以使用 Socket.io ，这个很好的封装了 WebSocket 接口，提供了更简单、灵活的接口，也对不支持 WebSocket 的浏览器提供了向下兼容
     ```javascript
         // 服务端
         const express = require('express')

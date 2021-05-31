@@ -1,3 +1,24 @@
+# 标准的 CSS 盒子模型及和其低版本的 IE 盒子模型的区别？
+* 盒子模型：
+    1. margin（外边距）———— 清除边框外的取余，外边距是透明的
+    2. Border（边框）———— 围绕在内边距和内容外的边框
+    3. Padding（内边距）———— 清除内容周围的区域，内边距是透明的
+    4. Content（内容）———— 盒子的内容，显示文本和图片
+* 标准（W3C）盒子模型：width = 内容宽度（content）+ border + padding + margin
+![W3C盒子模型](./src/image/CSS_images/W3C盒子模型.jpg)
+* 低版本 IE 盒子模型：width = 内容宽度（content + border + padding） + margin
+![IE6盒子模型](./src/image/CSS_images/IE6盒子模型.jpg)
+* 区别：
+    * 标准盒子模型盒子的 height 和 width 是 content （内容）的宽高，而 IE 盒子模型盒子的宽高则包括 content + padding + border
+    ![盒模型区别](./src/image/CSS_images/盒模型区别.jpg)
+* box-sizing 属性，该属性有三个可取的值，具体语法：
+    * box-sizing: content-box | border-box | inherit
+
+# CSS 选择符有那些？哪些属性可以继承？
+* id 选择器（#content）、类选择器（.content）、标签选择器（div、p、span 等）、相邻选择器（h1+p）、子选择器（ul>li）、后代选择器（li a），通配符选择器（*）
+
+
+
 # CSS 属性
 ## 01. CSS 中定位的方式有那些？ position 属性的值有哪些以及之间的区别？
 * 标准文档流：在不使用其他与排列和定位相关的特殊 CSS 规则时，元素的默认排列规则
@@ -149,6 +170,7 @@
 ```css
 transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);
 ```
+
 ## 10. CSS 的权重和优先级
 * 权重：
     行内样式（+1000）；
@@ -160,6 +182,7 @@ transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);
     2. 使用 !important 达到最大优先级，都使用 !important 时，权重大的优先级高
 
 # CSS 布局
+
 ## 01. CSS 那些属性脱离文档流
 ### 1. 什么是文档流
 * 将窗体自上而下分为一行一行，并在每行中按从左到右依次排放元素，称为文档流，也称普通流
@@ -671,6 +694,45 @@ transform: rotate(45deg) scale(0.5) skew(30deg, 30deg) translate(100px, 100px);
     2. wrap 区域的高度通过设置 min-height，变为视口高度
     3. footer 要使用 margin 为负来确定自己的位置
     4. 在 mian 区域需要设置 padding-bottom。这也是为了防止负 margin 导致 footer 覆盖任何实际内容
+
+
+# rgba() 和 opacity 的透明效果有什么不同？
+opacity 作用于元素以及元素内的所有内容（包括文字）的透明度；
+rgba() 只作用于元素自身的颜色或其背景色，子元素不会继承透明效果；
+
+# png、jpg、 jpeg、 bmp、gif 这些图片格式解释一下，分别什么时候用。有没有了解过webp？
+（1）、png-便携式网络图片（Portable Network Graphics）,是一种无损数据压缩位图文件格式。优点是：压缩比高，色彩好。 大多数地方都可以用。
+（2）、jpg是一种针对相片使用的一种失真压缩方法，是一种破坏性的压缩，在色调及颜色平滑变化做的不错。在www上，被用来储存和传输照片的格式。
+（3）、gif是一种位图文件格式，以8位色重现真色彩的图像。可以实现动画效果。
+（4）、bmp的优点： 高质量图片；缺点： 体积太大； 适用场景： windows桌面壁纸；
+（4）、webp格式是谷歌在2010年推出的图片格式，压缩率只有jpg的2/3，大小比png小了45%。缺点是压缩的时间更久了，兼容性不好，目前谷歌和opera支持。
+
+# 尺寸单位
+1. px
+2. em 是相对长度单位。相对于当前对象内文本的字体尺寸。如当前对行内文本的字体尺寸未被人为设置，则相对于浏览器的默认字体尺寸
+    * em 的值并不是固定的；
+    * em 会继承父级元素的字体大小；
+    * 任意浏览器的默认字体高都是16px。所有未经调整的浏览器都符合: 1em=16px。body选择器中声明Font-size=62.5%<==>1em=10px。
+3. rem 是CSS3的一个相对单位（root em，根em）
+    * 使用rem为元素设定字体大小时，仍然是相对大小，但相对的只是HTML根元素
+    * 只要html的font-size大小不变，1rem所代表的font-size大小就不会变，rem只取决于html的font-size
+    * 如在 iPhone6 上，屏幕宽度为 375px，共有 750 个物理像素，则 750 rpx = 375 px = 750 物理像素，1rpx = 0.5px = 1 物理像素
+4. rpx：可以根据屏幕宽度进行自适应。规定屏幕宽为 750rpx
+    * 开发微信小程序可以用 iPhone6 作为视觉稿的标准
+
+* rem是相对于根元素（html）的字体大小，而em是相对于其父元素的字体大小。
+
+5. vw 和 vh
+    * vw,视窗宽度，1vw=视窗宽度的1%
+    * vh,视窗高度，1vh=视窗高度的1%
+    * 如果浏览器的高是900px,1vh求得的值为9px。同理，如果显示窗口宽度为750px,1vw求得的值为7.5px。
+
+6. vmin 和 vmax
+    * vmin和vmax是相对于视口的高度和宽度两者之间的最小值或最大值。
+    * 浏览器的高为1100px、宽为700px，那么1vmin就是7px，1vmax就是11px
+    * 浏览器的高为800px，宽为1080px，那么1vmin也是8px，1vmax也是10.8px
+    * vmin取宽度高度两者更小者/100
+    * vmax取宽度高度两者更大者/100
 
 # 性能优化
 ## 01. 雪碧图
