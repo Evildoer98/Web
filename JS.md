@@ -1572,6 +1572,72 @@ instanceof 原理
     1. 捕获阶段
     2. 目标阶段
     3. 冒泡阶段
+## 事件绑定（ DOM0 级和 DOM2 级）
+### DOM0级（on+type）
+```javascript
+eg1:
+    <div id = "box1"></div>
+
+    box1.onclick = function () {
+        console.log('box1')
+    }
+    // 输出 box1
+eg2:
+    <div id = "box1"></div>
+    box1.onclick = function () {
+        console.log('box1')
+    }
+    box1.onclick = function () {
+        console.log('box1 two')
+    }
+    // 输出 box1 two
+```
+* 输出了 box1 two，因为 DOM0 级会覆盖掉之前在同一个元素上的绑定
+```javascript
+    <div id = "box1">
+        <div id = "box2">
+            <div id = "box3"></div>
+        </div>
+    </div>
+    box1.onclick = function () {
+        console.log('box1')
+    }
+    box2.onclick = function () {
+        console.log('box2')
+    }
+    box3.onclick = function () {
+        console.log('box3')
+    }
+    // 点击 box1，输出 box1
+    // 点击 box2，输出 box2 box1
+    // 点击 box3，输出 box3 box2 box1
+```
+* 这种现象就称为事件冒泡，一级一级的网上冒到 window。
+* DOM0 级只支持冒泡阶段
+### DOM2级（addEventListener）
+```javascript
+    <div id = "box1">box1
+        <div id = "box2">box2
+            <div id = "box3">box3</div>
+        </div>
+    </div>
+    box1.addEventListener('click', function () {
+        console.log('box1');
+    }, false)
+    box2.addEventListener('click', function () {
+        console.log('box2');
+    }, false)
+    box3.addEventListener('click', function () {
+        console.log('box3');
+    }, false)
+```
+* 输出结果与上面一样，因为绑定在冒泡阶段（true 捕获，false 冒泡）
+
+
+
+
+
+
 
 # 线程机制
 ## 01. 进程与线程
