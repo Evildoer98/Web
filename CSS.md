@@ -426,6 +426,121 @@
         * 如果元素的层级一样，则优先显示靠下的元素
         * 祖先元素的层级再高也不会盖住后代元素（除非重叠的时候，层级越高，就会盖住后代元素）
 
+# 字体和文本
+* font-face 可以将服务器中的字体直接提供给用户去使用
+    * 问题：
+        1. 加载速度
+        2. 版权
+        3. 字体格式
+    * eg：
+        ```css
+            @font-face {
+                /* 指定字体的名字 */
+            font-family:'myfont' ;
+            /* 服务器中字体的路径 */
+            src: url('./font/ZCOOLKuaiLe-Regular.ttf') format("truetype");
+        }
+        ```
+* 字体相关的样式
+    1. color 设置字体颜色
+    2. font-size 字体的大小
+        * 和 font-size 相关的单位
+            1. em 相当于当前元素的一个 font-size
+            2. rem 相对于根元素的一个 font-size
+    3. font-family 字体族（字体的格式）
+        * 可选值
+            1. serif 衬线字体
+            2. sans-serif 非衬线字体
+            3. monospace 等宽字体
+        * font-family 可以通知指定多个字体，多个字体间使用,间隔
+            * 字体生效时优先使用第一个，第一个无法使用则使用第二个 以此类推
+* text-align 文本的水平对齐
+    * 可选值
+        1. left 左侧对齐
+        2. right 右侧对齐
+        3. center 居中对齐
+        4. justify 两端对齐
+* vertical-align 文本垂直对齐
+    * 可选值
+        1. baseline 默认值 基线对齐
+        2. top 顶部对齐
+        3. bottom 底部对齐
+        4. middle 居中对齐
+* text-decoration 设置文本修饰
+    * 可选值
+        1. none 
+        2. underline 下划线
+        3. line-through 删除线
+        4. overline 上划线
+* white-space 设置网页如何处理空白
+    * 可选值
+        1. normal 正常
+        2. nowrap 不换行
+        3. pre 保留空白
+
+# 背景
+* background-color 设置背景颜色
+* background-image 设置背景图片
+    1. 同时设置背景图片和背景颜色，这样背景颜色将会成为图片的背景色
+    2. 如果背景的图片小于元素，则背景图片会自动在元素中平铺将元素铺满
+    3. 如果背景的图片大于元素，将会有一个部分背景无法完全显示
+    4. 如果背景图片的元素一样大，则会直接正常显示
+* background-repeat 用来设置背景的重复方式
+    * 可选值
+        1. repeat 默认值，背景会沿着 X 轴 Y轴双方向重复
+        2. repeat-x 沿着 X 轴方向重复
+        3. repeat-y 沿着 Y 轴方向重复
+        4. no-repeat 背景图片不重复
+* background-position 设置背景图片的位置
+    * 设置方式
+        * 通过 top left right bottom center 几个表示方位的词来设置背景图片的位置
+            * 设置方位词时必须要同时指定两个值，如果只写一个则第二个默认就是 center
+        * 通过偏移量来指定背景图片的位置
+            * 水平方向的偏移量 垂直方向变量
+* background-clip 设置背景的范围
+    * 可选值
+        1. border-box 默认值，背景会出现在边框的下边
+        2. padding-box 背景不会出现在边框，只出现在内容区和内边距
+        3. content-box 背景只会出现在内容区
+* background-origin 背景图片的偏移量计算的原点
+    * 可选值
+        1. padding-box 默认值，background-position 从内边距开始计算
+        2. content-box 背景图片的偏移量从内容区处计算
+        3. border-box 背景图片的变量从边框处开始计算
+* background-size 设置背景图片的大小
+    * 第一个值表示宽度，第二个值表示高度
+    * 如果只写一个，则第二个值默认是 auto
+        1. cover 图片的比例不变，将元素铺满
+        2. contain 图片比例不变，将图片在元素中完整显示
+* background-attachment 背景图片是否跟随元素移动
+    * 可选值：
+        1. scroll 默认值 背景图片会跟随元素移动
+        2. fixed 背景会固定在页面中，不会随元素移动
+
+# 渐变
+* 线性渐变，颜色沿着一条直线发生变化 linear-gradient() 
+    * eg：linear-gradient(red, yellow) 红色在开头，黄色在结尾，中间是过渡区域
+    * 线性渐变的开头，可以指定一个渐变方向
+        1. to left/right
+        2. to bottom/top
+        3. deg deg 表示度数
+        4. turn 表示圈
+    * 渐变可以同时指定多个颜色，多个颜色默认情况下平均分布
+* 径向渐变 (放射性的效果) radial-gradient() 
+    * radial-gradient(大小 at 位置, 颜色 位置 ,颜色 位置 ,颜色 位置)
+        * 大小：
+            circle 圆形
+            ellipse 椭圆
+            closest-side 近边	
+            closest-corner 近角
+            farthest-side 远边
+            farthest-corner 远角
+        * 位置：
+            top right left center bottom
+
+
+#
+
 # CSS 属性
 ## 01. CSS 中定位的方式有那些？ position 属性的值有哪些以及之间的区别？
 * 标准文档流：在不使用其他与排列和定位相关的特殊 CSS 规则时，元素的默认排列规则
