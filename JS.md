@@ -1615,28 +1615,83 @@ eg2:
 * 这种现象就称为事件冒泡，一级一级的网上冒到 window。
 * DOM0 级只支持冒泡阶段
 ### DOM2级（addEventListener）
-```javascript
-    <div id = "box1">box1
+* 冒泡阶段
+    ```javascript
+        <div id = "box1">box1
+            <div id = "box2">box2
+                <div id = "box3">box3</div>
+            </div>
+        </div>
+        box1.addEventListener('click', function () {
+            console.log('box1');
+        }, false)
+        box2.addEventListener('click', function () {
+            console.log('box2');
+        }, false)
+        box3.addEventListener('click', function () {
+            console.log('box3');
+        }, false)
+        // 点击 box1，输出 box1
+        // 点击 box2，输出 box2 box1
+        // 点击 box3，输出 box3 box2 box1
+    ```
+* 输出结果与上面一样，因为绑定在冒泡阶段（true 捕获，false 冒泡）
+* 捕获阶段
+    ```javascript
+         <div id = "box1">box1
         <div id = "box2">box2
             <div id = "box3">box3</div>
         </div>
     </div>
     box1.addEventListener('click', function () {
         console.log('box1');
-    }, false)
+    }, true)
     box2.addEventListener('click', function () {
         console.log('box2');
-    }, false)
+    }, true)
     box3.addEventListener('click', function () {
         console.log('box3');
+    }, true)
+    // 点击 box1，输出 box1
+    // 点击 box2，输出 box1 box2
+    // 点击 box3，输出 box1 box2 box3
+    ```
+
+* 捕获阶段和冒泡阶段
+    ```javascript
+        <div id = "box1">box1
+        <div id = "box2">box2
+            <div id = "box3">box3</div>
+        </div>
+    </div>
+    // 捕获阶段
+    box1.addEventListener('click', function () {
+        console.log('box1 捕获阶段');
+    }, true)
+    box2.addEventListener('click', function () {
+        console.log('box2 捕获阶段');
+    }, true)
+    box3.addEventListener('click', function () {
+        console.log('box3 捕获阶段');
+    }, true)
+    // 冒泡阶段
+    box1.addEventListener('click', function () {
+        console.log('box1 冒泡阶段');
     }, false)
-```
-* 输出结果与上面一样，因为绑定在冒泡阶段（true 捕获，false 冒泡）
-
-
-
-
-
+    box2.addEventListener('click', function () {
+        console.log('box2 冒泡阶段');
+    }, false)
+    box3.addEventListener('click', function () {
+        console.log('box3 冒泡阶段');
+    }, false)
+    // 点击 box3
+        // box1 捕获阶段
+        // box2 捕获阶段
+        // box3 捕获阶段
+        // box3 冒泡阶段
+        // box2 冒泡阶段
+        // box1 冒泡阶段
+    ```
 
 
 # 线程机制
