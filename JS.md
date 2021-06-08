@@ -1572,6 +1572,44 @@ instanceof 原理
     1. 捕获阶段
     2. 目标阶段
     3. 冒泡阶段
+    ![事件的冒泡和捕获](./src/image/JS_images/事件冒泡和捕获.jpg)
+## 事件冒泡
+* 事件会从最内层的元素开始发生，一直向上传播，直到 document 对象
+* 阻止事件冒泡
+    1. 给子级加 event.stopPropagation()
+        ```javascript
+            $('#div').mousedown(function(e) {
+                var e = event || window.event;
+                event.stopPropagation()
+            })
+        ```
+    2. 在事件处理函数中返回 false
+        ```javascript
+            $("#div").mousedown(function(event) {
+                var e=e||window.event
+                return false
+            })
+        ```
+    * 以上两种的区别：return false 不仅阻止了事件往上冒泡，而且阻止了事件本身（默认事件）；event.stopPropagation() 只阻止事件往上冒泡，不阻止事件本身
+    3. event.target == event.currentTarget，让触发事件的元素等于绑定事件的元素，也可以阻止事件冒泡
+* 阻止默认事件
+    1. event.preventDefault()
+    2. return false
+
+## 事件捕获
+* 与事件冒泡相反，事件会从最外层开始发生，直到最具体的元素
+## addEventListener 的第三个参数
+* DOM2 级事件规定的事件流同时支持了事件捕获阶段和事件冒泡阶段，而作为开发者，可以选择在事件处理函数在哪一个阶段被调用
+* addEventListener 方法用来为一个特定的元素绑定一个事件处理函数
+    * element.addEventListener(event, function, useCaptrue)
+        1. event 字符串，指定事件名字
+        2. function 指定事件触发时执行的函数
+        3. useCapture
+            1. false 默认，事件句柄在冒泡阶段执行（即在事件冒泡阶段调用事件处理函数）
+            2. true：事件句柄在捕获阶段执行（即在事件捕获阶段调用处理函数）
+            
+
+
 ## 事件绑定（ DOM0 级和 DOM2 级）
 ### DOM0级（on+type）
 ```javascript
