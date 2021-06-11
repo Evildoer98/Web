@@ -1953,6 +1953,244 @@ eg2:
     * 闭包
 
 
+# 神奇的 reduce
+## 基础
+* reduce() 方法对数组中的每个元素执行一个 reducer函数 （升序执行），将其结果汇总为单个返回值
+* 定义：对数组中的每个元素执行一个自定义的累加器，将其结果汇总为单个返回值
+* 形式：array.reduce((total, value, index, array) => {}, initValue)
+* 形参：
+    1. callback：回调函数（必选）
+    2. initValue：初始值（可选）
+* 回调函数的参数：
+    1. total：累加器完成计算的返回值（必选）
+    2. value：当前元素（必选）
+    3. index：当前元素的索引（可选）
+    4. array：当前元素所属的数组对象（可选）
+* 过程：
+    1. 以 total 作为累计结果的初始值，不设置 total 则以数组第一个元素为初始值
+    2. 开始遍历，使用累计器处理 value，将 value 的映射结果累计到 total 上，结束此次循环，返回 total
+    3. 进入下一次循环，重复上述操作，直至数组最后一个元素
+    4. 结束遍历，返回最终的 total
+* reduce 的精华所在是将累计器逐个作用域数组成员上，把上一次输出的值作为下一次输入的值
+    ```javascript
+        const arr = [3, 5, 1, 4, 2]
+        const a = arr.reduce((t, v) => t + v)
+        // 等同于
+        const b = arr.reduce((t, v) => t + v, 0)
+    ```
+* reduce 对空数组无效
+
+## 高级
+1. 累加累乘
+    ```javascript
+        function Accumulation(...vals) {
+            return vals.reduce((t, v) => t + v, 0)
+        }
+        function Multiplication(...vals) {
+            return vasl.reduce((t, v) => t * v, 1)
+        }
+        Accumulation(1, 2, 3, 4, 5); // 15
+        Multiplication(1, 2, 3, 4, 5); // 120
+    ```
+2. 权重求和
+    ```javascript
+        const scores = [
+            { score: 90, subject: "chinese", weight: 0.5},
+            { score: 95, subject: "math", weight: 0.3},
+            { score: 95, subject: "english", weight: 0.2}
+        ]
+        const result = scores.reduce((t, v) => t + v.score * v.weight, 0) // 90.5
+    ```
+3. 代替 reverse
+    ```javascript
+        function Reverse (arr = []) {
+            return arr.reduceRight((t, v) => (t.push(v), t), [])
+        }
+        Reverse([1, 2, 3, 4, 5]); // [5, 4, 3, 2, 1]
+    ```
+4. 代替 map 和 filter
+    ```javascript
+        const arr = [0, 1, 2, 3]
+
+        // 代替 map:[0, 2, 4, 6]
+        const a = arr.map(v => v * 2)
+        const b = arr.reduce((t, v) => [...t, v*2], [])
+
+        // 代替 filter:[2, 3]
+        const c = arr.filter(v => v > 1)
+        const d = arr.reduce((t, v) => v > 1 ? [...t, v] : t, [])
+
+        // 代替 map 和 filter : [4, 6]
+        const e = arr.map(v => v * 2).filter(v => v 2)
+        const f = arr.reduce((t, v) => v * 2 > 2 ? [...t, v * 2] : t, [])
+    ```
+5. 代替 some 和 every
+    ```javascript
+        const scores = [
+            {score: 45, subject: "chinese"},
+            {score: 90, subject: "math"},
+            {score: 60, subject: "english"}
+        ]
+        // 代理 some：至少一门合格
+        const isAtLeastOneQualified = scores.reduce((t, v) => t || v.score >= 60, false) // true
+        // 代替 every：全部合格
+        const isAllQualified = scores.reduce((t, v) => t && t.score >= 60, true) // false
+    ```
+6. 数组分割
+    ```javascript
+        function Chunk (arr = [], size = 1) {
+            return arr.length ? arr.reduce((t, v) => (t[t.length - 1].length === size ? t.push([v]) : t[t.length - 1].push(v), t), [[]]) : []
+        }
+        const arr = [1, 2, 3, 4, 5];
+        Chunk(arr, 2); // [[1, 2], [3, 4], [5]]
+    ```
+7. 数组过滤
+    ```javascript
+        function Difference(arr = [], oarr = []) {
+            return arr.reduce((t, v) => (!oarr.includes(v) && t.push(v), t), [])
+        }
+        const arr1 = [1, 2, 3, 4, 5]
+        const arr2 = [2, 3, 6]
+        Difference(arr1, arr2)
+    ```
+8. 数组填充
+    ```javascript
+        function fill(arr = [], val = "", start = 0, end = arr.length) {
+            if (start < 0 || start >= end || end > arr.length) {
+                return arr
+            }
+            return [
+                ...arr.slice(0, start),
+                ...arr.slice(start,end).reduce((t, v) => (t.push(val || v), t), []),
+                ...arr.slice(end, arr.length)
+            ]
+        }
+        const arr = [0, 1, 2, 3, 4, 5, 6]
+        fill(arr, "Evildoer98", 2, 5) // [0, 1, "Evildoer98", "Evildoer98", "Evildoer98", 5, 6]
+    ```
+9. 数组扁平
+    ```javascript
+        function flat(arr) {
+            return arr.reduce((t, v) => t.concat(Array.isArray(v) ? flat(v) : v), [])
+        }
+        const arr = [0, 1, [2, 3], [4, 5, [6, 7]], [8, [9, 10, [11, 12]]]];
+        flat(arr) // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    ```
+10. 数组去重
+    ```javascript
+        function uniq(arr) {
+            return arr.reduce((t, v) => t.includes(v) ? t : [...t, v], [])
+        }
+        const arr = [2, 1, 0, 3, 2, 1, 2]
+        uniq(arr) // [2, 1, 0, 3]
+    ```
+11. 数组最大最小值
+    ```javascript
+        function Max(arr) {
+            return arr.reduce((t, v) => t > v ? t : v)
+        }
+        function Min(arr) {
+            return arr.reduce((t, v) => t < v ? t : v)
+        }
+        const arr = [12, 45, 21, 65, 38, 76, 108, 43];
+        Max(arr); // 108
+        Min(arr); // 12
+    ```
+12. 数组成员独立拆解
+    ```javascript
+        function unzip (arr) {
+            return arr.reduce(
+                (t, v) => (v.forEach((w, i) => t[i].push(w)), t),
+                Array.from({length: Math.max(...arr.map(v => v.length))}).map(v => [])
+            )
+        }
+        const arr = [["a", 1, true], ["b", 2, false]];
+        Unzip(arr); // [["a", "b"], [1, 2], [true, false]]
+    ```
+13. 数组成员个数统计
+    ```javascript
+        function Count (arr = []) {
+            return arr.reduce((t, v) => (t[v] = (t[v] || 0) + 1, t), {})
+        }
+        const arr = [0, 1, 1, 2, 2, 2];
+        Count(arr); // { 0: 1, 1: 2, 2: 3 }
+    ```
+14. 数组成员位置记录
+    ```javascript
+        function Position (arr = [], val) {
+            return arr.reduce((t, v, i) => (v === val && t.push(i), t), [])
+        }
+        const arr = [2, 1, 5, 4, 2, 1, 6, 6, 7];
+        Position(arr, 2); // [0, 4]
+    ```
+15. 数组成员特性分组
+    ```javascript
+        function Group (arr = [], key) {
+            return key ? arr.reduce((t, v) => (!t[v[key]] && (t[v[key]] = []), t[v[key]].push(v), t), {}) : {}
+        }
+        const arr = [
+            { area: "GZ", name: "YZW", age: 27 },
+            { area: "GZ", name: "TYJ", age: 25 },
+            { area: "SZ", name: "AAA", age: 23 },
+            { area: "FS", name: "BBB", age: 21 },
+            { area: "SZ", name: "CCC", age: 19 }
+        ]; // 以地区area作为分组依据
+        Group(arr, "area"); // { GZ: Array(2), SZ: Array(2), FS: Array(1) }
+    ```
+16. 数组成员所含关键字统计
+    ```javascript
+        function Keyword(arr = [], keys = []) {
+            return keys.reduce((t, v) => (arr.some(w => w.includes(v)) && t.push(v), t), [])
+        }
+        const text = [
+            "今天天气真好，我想出去钓鱼",
+            "我一边看电视，一边写作业",
+            "小明喜欢同桌的小红，又喜欢后桌的小君，真TM花心",
+            "最近上班喜欢摸鱼的人实在太多了，代码不好好写，在想入非非"
+        ];
+        const keyword = ["偷懒", "喜欢", "睡觉", "摸鱼", "真好", "一边", "明天"];
+        Keyword(text, keyword); // ["喜欢", "摸鱼", "真好", "一边"]
+    ```
+17. 字符串翻转
+    ```javascript
+        function ReverseStr (str = "") {
+            return str.split("").reduceRight((t, v) => t + v)
+        }
+        const str = "reduce最牛逼"
+        ReverseStr(str); // "逼牛最ecuder"
+    ```
+18. 数字千分化
+    ```javascript
+        function ThousandNum(num = 0) {
+            const str = (+num).toString().split(".");
+            const int = nums => nums.split("").reverse().reduceRight((t, v, i) => t + (i % 3 ? v : `${v},`), "").replace(/^,|,$/g, "");
+            const dec = nums => nums.split("").reduce((t, v, i) => t + ((i + 1) % 3 ? v : `${v},`), "").replace(/^,|,$/g, "");
+            return str.length > 1 ? `${int(str[0])}.${dec(str[1])}` : int(str[0]);
+        }
+        ThousandNum(1234); // "1,234"
+        ThousandNum(1234.00); // "1,234"
+        ThousandNum(0.1234); // "0.123,4"
+        ThousandNum(1234.5678); // "1,234.567,8"
+    ```
+19. 异步累计
+    ```javascript
+        async function AsyncTotal(arr = []) {
+            return arr.reduce(async(t, v) => {
+                const at = await t;
+                const todo = await Todo(v);
+                at[v] = todo;
+                return at;
+            }, Promise.resolve({}));
+        }
+        const result = await AsyncTotal(); // 需要在async包围下使用
+    ```
+20. 斐波那契数列
+    ```javascript
+
+    ```
+
+
+
 
 # ES一系列新特性
 ## ES6
