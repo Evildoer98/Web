@@ -2186,11 +2186,67 @@ eg2:
     ```
 20. 斐波那契数列
     ```javascript
-
+        function Fibonacci (len = 2) {
+            const arr = [...new Array(len).keys()]
+            return arr.reduce((t, v) => (i > 1 && t.push(t[i - 1]), t), [0, 1])
+        }
+        Fibonacci(10); // [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
     ```
-
-
-
+21. URL 参数反序列化
+    ```javascript
+        function ParseUrlSearch() {
+            return location.search.replace(/(^\?)|(&$)/g, "").split("&").reduce((t, v) => {
+                const [key, val] = v.split("=")
+                t[key] = decodeURIComponent(val)
+                return t
+            }, {})
+        }
+        // 假设URL为：https://www.baidu.com?age=25&name=TYJ
+        ParseUrlSearch(); // { age: "25", name: "TYJ" }
+    ```
+22. URL 参数序列化
+    ```javascript
+        function StringifyUrlSearch (search = {}) {
+            return Object.entries(search).reduce(
+                (t, v) => '${t}${v[0]}=${encodeURIComponent(v[1])}$',
+                Object.keys(search).length ? "?" : ""
+            ).replace(/&$/, "")
+        }
+        StringifyUrlSearch({ age: 27, name: "YZW" }); // "?age=27&name=YZW"
+    ```
+23. 返回对象指定键值
+    ```javascript
+        function GetKeys(obj = {}, keys = []) {
+            return Object.keys(obj).reduce((t, v) => (keys.includes(v) && (t[v] = obj[v]), t), {})
+        }
+        const target = {a: 1, b: 2, c: 3, d: 4}
+        const keyword = ["a", "d"]
+        GetKeys(target, keyword)  // {a: 1, d: 4} 
+    ```
+24. 数组转对象
+    ```javascript
+        const people = [
+            {area: "SC", name: "CD", age: 27}
+            {area: "BJ", name: "BJ", age: 25}
+        ]
+        const map = people.reduce((t, v) => {
+            const {name, ...rest} = v
+            t[name] = rest
+            return t
+        }, {})
+    ```
+25. Redux Compose 函数原理
+    ```javascript
+        function Compose(...funs) {
+            if (funs.length === 0) {
+                return arg => arg
+            }
+            if (funs.length === 1) {
+                return fun[0]
+            }
+            return funs.reduce((t, v) => (...arg) => t(v(...arg)))
+        }
+    ```
 
 # ES一系列新特性
 ## ES6
