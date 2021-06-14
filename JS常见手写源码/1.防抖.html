@@ -18,7 +18,7 @@
          *  window 触发 resize 的时候，不断的调整浏览器窗口大小会不断的触发这个事件，用防抖来让其只触发一次
          */
 
-        const f1 = function (Func, ms){
+        const debounce = function (Func, ms){
             let timer
            return function (...args){
                if (timer) {
