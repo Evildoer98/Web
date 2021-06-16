@@ -322,7 +322,7 @@
     html    dom树                   
                       render tree   计算布局信息（Layout）   UI引擎渲染（paint）   用户所见
     css    css结构体
-                                         回流（重排）                   重绘
+                                         回流（重排）               重绘
     ```
 * 总体过程：
     1. 解析html文件（非上下文无关文法：需考虑上下文），创建DOM树
