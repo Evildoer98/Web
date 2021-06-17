@@ -18,10 +18,11 @@
          *  鼠标不断点击触发，mousedown （单位事件内只触发一次）
          *  监听滚动事件，比如是否滑到底部自动加载更多，用 throttle 来判断
          */
-        const f1 = function (Func, ms){
+        const throttle = function (Func, ms){
             let canRun = true
             return function (...args){
                 if (!canRun) {
+                    console.log(canRun);
                     return 
                 }
                 canRun = false

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .image-item {
+            display: block;
+            margin-bottom: 50px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <img src="" alt="" class="image-item" data-src='./src/images/1.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/2.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/3.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/4.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/5.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/6.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/7.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/8.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/9.jpg'>
+    <img src="" alt="" class="image-item" data-src='./src/images/10.jpg'>
+    <script>
+        const lazyload = function () {
+            const imgs = document.getElementsByTagName('img')
+            const len = imgs.length
+            // 视口的高度
+            const viewHeight = document.documentElement.clientHeight
+            // 滚动条高度
+            const scrollHeight = document.documentElement.scrollTop || document.body.scrollTop
+            for (let i = 0; i < len; i++) {
+                const offsetHeight = imgs[i].offsetTop
+                if (offsetHeight < viewHeight + scrollHeight) {
+                    // console.log(imgs[i].dataset.src)
+                    const src = imgs[i].dataset.src
+                    imgs[i].src = src
+                    console.log('开始滚啦');
+                    console.log(i);
+                }        
+                // imgs[i].removeAttribute('data-src')    
+            }
+        }
+
+        const throttle = function (fn, ms) {
+            let canRun = true
+            return function (...arg) {
+                if (!canRun) {
+                    return 
+                }
+                canRun = false
+                setTimeout(() => {
+                    fn.apply(this, arg)
+                }, ms);
+            }
+        }
+        
+        const init = function () {
+            const imgs = document.getElementsByTagName('img')
+            const len = imgs.length
+            const viewHeight = document.documentElement.clientHeight
+            for (let i = 0; i < len; i++) {
+                const offsetHeight = imgs[i].offsetTop
+                if (offsetHeight < viewHeight) {
+                    // console.log(imgs[i].dataset.src)
+                    const src = imgs[i].dataset.src
+                    imgs[i].src = src
+                    console.log('初始化');
+                    console.log(i);
+                }        
+            }
+        }
+        // window.onload = lazyload
+        window.addEventListener('scroll', lazyload)
+        // 使用节流进行优化
+        // window.addEventListener('scroll', throttle(lazyload, 3000))
+    </script>
+</body>
+</html>

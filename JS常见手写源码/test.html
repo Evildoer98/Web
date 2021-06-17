@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="user" data-id="250" data-name="张三" data-age="29" data-date-of-birth>
+        张三
+    </div>
+    <script>
+        var el = document.getElementById('user')
+        console.log(el.id);
+        console.log(el.dataset);
+        console.log(el.dataset.id);
+        console.log(el.dataset.name);
+        console.log(el.dataset.age);
+        // console.log(el.dataset.data-of-birth); // 错误写法
+        // 可以先打印el.dataset
+        console.log(el.dataset.dateOfBirth);
+
+        el.dataset.dateOfBirth = '1999-01-20'
+        console.log(el.dataset.dateOfBirth);
+
+        el.dataset.addSomeThing = 'test'
+        console.log(el.dataset);
+        console.log(el.dataset.addSomeThing);
+        /**
+         * HTMLElement.dataset属性允许无论是在读取模式和写入模式下访问在 HTML或 DOM中的元素上设置的所有自定义数据属性(data-*)集。 
+         * 是一个DOMStringMap 的映射，每个自定义数据属性的一个条目
+         * 自定义数据属性 dataset，在标签中使用 data-
+         * 在脚本中直接使用 元素.dataset.需要添加的属性
+         */
+    </script>
+</body>
+</html>
