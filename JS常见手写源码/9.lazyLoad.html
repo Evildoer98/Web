@@ -28,12 +28,16 @@
         const lazyload = function () {
             const imgs = document.getElementsByTagName('img')
             const len = imgs.length
-            // 视口的高度
+            // 视口的高度，获取屏幕可视窗口高度
             const viewHeight = document.documentElement.clientHeight
-            // 滚动条高度
+            // console.log(document.documentElement.clientHeight);
+            // 获取浏览器窗口顶部与文档顶部之间的距离，即滚动条滚动的距离
             const scrollHeight = document.documentElement.scrollTop || document.body.scrollTop
+            // console.log(scrollHeight);
             for (let i = 0; i < len; i++) {
+                // 获取元素相对文档顶部的顶部的距离
                 const offsetHeight = imgs[i].offsetTop
+                console.log(offsetHeight);
                 if (offsetHeight < viewHeight + scrollHeight) {
                     // console.log(imgs[i].dataset.src)
                     const src = imgs[i].dataset.src
@@ -41,7 +45,7 @@
                     console.log('开始滚啦');
                     console.log(i);
                 }        
-                // imgs[i].removeAttribute('data-src')    
+                // imgs[i].removeAttribute('data-src')
             }
         }
 
@@ -54,6 +58,7 @@
                 canRun = false
                 setTimeout(() => {
                     fn.apply(this, arg)
+                    canRun = true
                 }, ms);
             }
         }
@@ -65,18 +70,17 @@
             for (let i = 0; i < len; i++) {
                 const offsetHeight = imgs[i].offsetTop
                 if (offsetHeight < viewHeight) {
-                    // console.log(imgs[i].dataset.src)
                     const src = imgs[i].dataset.src
                     imgs[i].src = src
-                    console.log('初始化');
-                    console.log(i);
-                }        
+                }
+                // imgs[i].removeAttribute('data-src')
             }
         }
-        // window.onload = lazyload
-        window.addEventListener('scroll', lazyload)
+        
+        window.onload = init
+        // window.addEventListener('scroll', lazyload)
         // 使用节流进行优化
-        // window.addEventListener('scroll', throttle(lazyload, 3000))
+        window.addEventListener('scroll', throttle(lazyload, 3000))
     </script>
 </body>
 </html>
